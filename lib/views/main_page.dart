@@ -2,15 +2,17 @@ import 'package:flutter/material.dart';
 import 'home/home_page.dart';
 import 'auscultation/auscultation_page.dart';
 import 'mine/mine_page.dart';
+import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 class MainPage extends StatefulWidget {
   @override
   _MainpageState createState() => _MainpageState();
 }
 
-class _MainpageState extends State<MainPage>
-    with SingleTickerProviderStateMixin {
+class _MainpageState extends State<MainPage> with SingleTickerProviderStateMixin {
   PageController pageController;
+  PanelController panel = new PanelController();
+
   int _page = 0;
 
   String img = 'images/hearing.png';

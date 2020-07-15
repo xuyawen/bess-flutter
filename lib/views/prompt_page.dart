@@ -16,11 +16,16 @@ class _PromptPageState extends State<PromptPage>{
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return Container(
+    return ConstrainedBox(
+        constraints: BoxConstraints.expand(),
         child: Stack(
           alignment:Alignment.center,
           children: <Widget>[
-            Image.asset("images/wellcome.jpg", fit: BoxFit.cover),
+            SizedBox(
+              width: double.infinity,
+              height: double.infinity,
+              child: Image.asset("images/wellcome.jpg", fit: BoxFit.cover),
+            ),
             Positioned(
                 right: 25.0,
                 top: 40.0,
@@ -71,7 +76,6 @@ class _PromptPageState extends State<PromptPage>{
                 child: FlatButton(
                   color: Colors.white,
                   textColor: Colors.blue,
-                  highlightColor: Colors.blue,
                   colorBrightness: Brightness.dark,
                   splashColor: Colors.grey,
                   child: Text("添加设备", style: TextStyle(fontSize: 18),),

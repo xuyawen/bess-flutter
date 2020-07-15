@@ -1,8 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import '../views/home/edit_pat_page.dart';
 
-Future<int> showSheet(BuildContext context) {
-  showModalBottomSheet<int>(
+Future<int> bottomSheet(BuildContext context) {
+  showModalBottomSheet (
     shape: RoundedRectangleBorder(borderRadius: const BorderRadius.vertical(top: Radius.circular(20))),
     isScrollControlled: true,
     context: context,
@@ -16,7 +17,7 @@ Widget _sheetWidget(context) {
   return SizedBox(
     height: 600,
     child: Container(
-      padding: EdgeInsets.only(top: 20.0),
+      padding: EdgeInsets.only(top: 29.0),
       child: Column(
         children: <Widget>[
           Flex(
@@ -97,6 +98,10 @@ Widget _sheetWidget(context) {
                   flex: 2,
                   child: GestureDetector(
                     child: Text('编辑信息'),
+                    onTap: () {
+                      Navigator.of(context)
+                          .push(MaterialPageRoute(builder: (BuildContext context) => EditPatPage()));
+                    },
                   ),
                 ),
               ],
@@ -164,10 +169,10 @@ Widget _sheetWidget(context) {
                 color: Colors.white,
                 boxShadow: [ //阴影
                   BoxShadow(
-                      color: Colors.grey,
-                      spreadRadius: 0.5,
-                      blurRadius: .5,
-                      offset: Offset(0, -1.5),
+                    color: Colors.grey,
+                    spreadRadius: 0.5,
+                    blurRadius: .5,
+                    offset: Offset(0, -1.5),
                   )
                 ]
             ),
