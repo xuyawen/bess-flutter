@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'change_pass_page.dart';
 import 'edit_user_page.dart';
 import 'about_page.dart';
+import '../login/login_page.dart';
 
 class MinePage extends StatefulWidget {
   @override
@@ -291,8 +292,15 @@ class _MinePageState extends State<MinePage> {
                 children: <Widget>[
                   Expanded(
                     flex: 9,
-                    child: Text('退出登录',
-                        style: TextStyle(fontSize: 20, color: Colors.yellow)),
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (BuildContext context) =>
+                                LoginPage()));
+                      },
+                      child: Text('退出登录',
+                          style: TextStyle(fontSize: 20, color: Colors.yellow)),
+                    ),
                   ),
                   Expanded(
                     flex: 1,

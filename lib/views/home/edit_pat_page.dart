@@ -7,8 +7,8 @@ class EditPatPage extends StatefulWidget {
 
 class _EditPatPage extends State<EditPatPage> {
   TextEditingController _nameController = TextEditingController();
-  TextEditingController _qrcodePassController = TextEditingController();
-  TextEditingController _agePassController = TextEditingController();
+  TextEditingController _qrcodeController = TextEditingController();
+  TextEditingController _ageController = TextEditingController();
   GlobalKey _formKey = GlobalKey<FormState>();
 
   Widget build(BuildContext context) {
@@ -82,7 +82,7 @@ class _EditPatPage extends State<EditPatPage> {
                       },
                     ),
                     TextFormField(
-                      controller: _qrcodePassController,
+                      controller: _qrcodeController,
                       decoration: InputDecoration(
                           labelText: '病历号',
                           suffixIcon: Icon(Icons.settings_overscan),
@@ -92,7 +92,7 @@ class _EditPatPage extends State<EditPatPage> {
                       },
                     ),
                     TextFormField(
-                      controller: _agePassController,
+                      controller: _ageController,
                       decoration: InputDecoration(
                           labelText: '年龄', hintText: '请选择出生年月日'),
                       validator: (v) {
