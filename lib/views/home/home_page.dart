@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
+import 'package:sticky_headers/sticky_headers.dart';
 import '../../widgets/bottom_sheet.dart';
 
 class HomePage extends StatefulWidget {
@@ -12,6 +13,33 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
 
    PanelController panel = new PanelController();
+
+   List data=[{
+     "date":"昨天 4月23日",
+     "group":[
+       "A分组1","A分组1","A分组1","A分组1","A分组1","A分组1"
+     ]
+   },{
+     "date":"4月13日 星期一",
+     "group":[
+       "B分组1","B分组1","B分组1","B分组1","B分组1","B分组1"
+     ]
+   },{
+     "date":"4月14日 星期二",
+     "group":[
+       "C分组1","C分组1","C分组1","C分组1","C分组1","C分组1"
+     ]
+   },{
+     "date":"4月14日 星期二",
+     "group":[
+       "D分组1","D分组1","D分组1","D分组1","D分组1","D分组1"
+     ]
+   },{
+     "date":"4月14日 星期二",
+     "group":[
+       "E分组1","E分组1","E分组1","E分组1","E分组1","E分组1"
+     ]
+   }];
 
   // GlobalKey key = GlobalKey();
 
@@ -96,6 +124,7 @@ class _HomePageState extends State<HomePage> {
                                 children: <Widget>[
                                   Wrap(
                                     spacing: 10.0,
+                                    crossAxisAlignment: WrapCrossAlignment.center,
                                     children: <Widget>[
                                       Text('LD-DS-20'),
                                       Icon(Icons.check_circle, size: 15, color: Colors.blue),
@@ -162,42 +191,28 @@ class _HomePageState extends State<HomePage> {
                     children: <Widget>[
                       SizedBox(
                         height: 573,
-                        child: ListView(
-                          padding: EdgeInsets.only(top: 0),
-                          children: <Widget>[
-                            Padding(
-                              padding: EdgeInsets.fromLTRB(10, 10, 5, 10),
-                              child: Text('昨天 7月13日', style: TextStyle(fontSize: 19)),
-                            ),
-                            Container(
-                              padding: EdgeInsets.all(8),
-                              child: _showSlidable(panel),
-                            ),
-                            Container(
-                              padding: EdgeInsets.all(8),
-                              child: _showSlidable(panel),
-                            ),
-                            Container(
-                              padding: EdgeInsets.all(8),
-                              child: _showSlidable(panel),
-                            ),
-                            Container(
-                              padding: EdgeInsets.all(8),
-                              child: _showSlidable(panel),
-                            ),
-                            Container(
-                              padding: EdgeInsets.all(8),
-                              child: _showSlidable(panel),
-                            ),
-                            Container(
-                              padding: EdgeInsets.all(8),
-                              child: _showSlidable(panel),
-                            ),
-                            Container(
-                              padding: EdgeInsets.all(8),
-                              child: _showSlidable(panel),
-                            ),
-                          ],
+                        child: ListView.builder(
+                            padding: EdgeInsets.only(top: 0),
+                            itemCount: data.length,
+                            itemBuilder: (context, index) {
+                              return StickyHeader(
+                                header: Container(
+                                  height: 50.0,
+                                  color: Colors.grey[50],
+                                  padding: EdgeInsets.symmetric(horizontal: 16.0),
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(data[index]['date'],
+                                    style: const TextStyle(color: Colors.black),
+                                  ),
+                                ),
+                                content: Container(
+                                  margin: EdgeInsets.only(left: 15, right: 15),
+                                  child: Column(
+                                    children: _buildSlidable(data[index]['group']),
+                                  ),
+                                ),
+                              );
+                            }
                         ),
                       ),
                     ]
@@ -314,50 +329,52 @@ class _HomePageState extends State<HomePage> {
   }
 
   // 滑动组件
-  Widget _showSlidable(PanelController panelController) {
-    return Slidable(
-      // key: Key('1'),
-      actionPane: SlidableStrechActionPane(),
-      actionExtentRatio: 0.25,
-      child: ListItem(
-        // key: key,
-        title: '肺动脉瓣',
-        panel: panelController,
-      ),
-      secondaryActions: <Widget>[
-        ClipRRect(
-          borderRadius: const BorderRadius.horizontal(right: Radius.circular(8), left: Radius.circular(8)),
-          child: SizedBox(
-            child: IconSlideAction(
-              color: const Color(0xFFf75d3c),
-              icon: Icons.delete,
-              closeOnTap: false,
-              onTap: () {
-                return showDialog<bool>(
-                    context: context,
-                    builder: (context) {
-                      return AlertDialog(
-                        title: Text('提示？'),
-                        content: Text('确定删除该条记录？'),
-                        actions: <Widget>[
-                          FlatButton(
-                            child: Text('取消'),
-                            onPressed: () => Navigator.of(context).pop(false),
-                          ),
-                          FlatButton(
-                            child: Text('确定'),
-                            onPressed: () => Navigator.of(context).pop(true),
-                          ),
-                        ],
-                      );
-                    }
-                );
-              },
+  List<Widget> _buildSlidable(List group) {
+    return group.map((item) {
+      return Slidable(
+        actionPane: SlidableStrechActionPane(),
+        actionExtentRatio: 0.25,
+        child: ListItem(
+          title: '肺动脉瓣',
+          panel: panel,
+        ),
+        secondaryActions: <Widget>[
+          ClipRRect(
+            borderRadius: const BorderRadius.horizontal(
+                right: Radius.circular(8), left: Radius.circular(8)),
+            child: SizedBox(
+              height: 77,
+              child: IconSlideAction(
+                color: const Color(0xFFf75d3c),
+                icon: Icons.delete,
+                closeOnTap: false,
+                onTap: () {
+                  return showDialog<bool>(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          title: Text('提示？'),
+                          content: Text('确定删除该条记录？'),
+                          actions: <Widget>[
+                            FlatButton(
+                              child: Text('取消'),
+                              onPressed: () => Navigator.of(context).pop(false),
+                            ),
+                            FlatButton(
+                              child: Text('确定'),
+                              onPressed: () => Navigator.of(context).pop(true),
+                            ),
+                          ],
+                        );
+                      }
+                  );
+                },
+              ),
             ),
           ),
-        ),
-      ],
-    );
+        ],
+      );
+    }).toList();
   }
 
 }
@@ -378,6 +395,7 @@ class ListItem extends StatelessWidget {
         Slidable.of(context).close();
       },
       child: Container(
+        margin: EdgeInsets.only(top: 5, bottom: 5),
         padding: EdgeInsets.only(top: 18, bottom: 18),
         decoration: BoxDecoration(
             color: Colors.white,

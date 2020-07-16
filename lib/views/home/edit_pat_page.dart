@@ -6,7 +6,6 @@ class EditPatPage extends StatefulWidget {
 }
 
 class _EditPatPage extends State<EditPatPage> {
-
   TextEditingController _nameController = TextEditingController();
   TextEditingController _qrcodePassController = TextEditingController();
   TextEditingController _agePassController = TextEditingController();
@@ -14,6 +13,7 @@ class _EditPatPage extends State<EditPatPage> {
 
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomPadding: false,
       appBar: AppBar(
         title: Text("编辑信息", style: TextStyle(color: Colors.black)),
         backgroundColor: Colors.white,
@@ -26,10 +26,11 @@ class _EditPatPage extends State<EditPatPage> {
             Container(
               margin: EdgeInsets.only(top: 30, bottom: 50),
               alignment: Alignment.centerLeft,
-              child: Text('患者的基本信息, 请务必保证资料的真实性。', style: TextStyle(fontSize: 16, color: Colors.grey)),
+              child: Text('患者的基本信息, 请务必保证资料的真实性。',
+                  style: TextStyle(fontSize: 16, color: Colors.grey)),
             ),
             Container(
-              padding: EdgeInsets.only(left: 90,right: 90),
+              padding: EdgeInsets.only(left: 90, right: 90),
               child: Flex(
                 direction: Axis.horizontal,
                 children: <Widget>[
@@ -40,8 +41,11 @@ class _EditPatPage extends State<EditPatPage> {
                       crossAxisAlignment: WrapCrossAlignment.center,
                       alignment: WrapAlignment.center,
                       children: <Widget>[
-                        Icon(Icons.account_circle, size: 50, color: Colors.pinkAccent),
-                        Text('女', style: TextStyle(color: Colors.pinkAccent, fontSize: 20))
+                        Icon(Icons.account_circle,
+                            size: 50, color: Colors.pinkAccent),
+                        Text('女',
+                            style: TextStyle(
+                                color: Colors.pinkAccent, fontSize: 20))
                       ],
                     ),
                   ),
@@ -52,8 +56,10 @@ class _EditPatPage extends State<EditPatPage> {
                       crossAxisAlignment: WrapCrossAlignment.center,
                       alignment: WrapAlignment.center,
                       children: <Widget>[
-                        Icon(Icons.account_circle, size: 50, color: Colors.blue),
-                        Text('男', style: TextStyle(color: Colors.blue, fontSize: 20))
+                        Icon(Icons.account_circle,
+                            size: 50, color: Colors.blue),
+                        Text('男',
+                            style: TextStyle(color: Colors.blue, fontSize: 20))
                       ],
                     ),
                   )
@@ -69,10 +75,8 @@ class _EditPatPage extends State<EditPatPage> {
                   children: <Widget>[
                     TextFormField(
                       controller: _nameController,
-                      decoration: InputDecoration(
-                          labelText: '姓名',
-                          hintText: '请输入姓名'
-                      ),
+                      decoration:
+                          InputDecoration(labelText: '姓名', hintText: '请输入姓名'),
                       validator: (v) {
                         return v.trim().length > 0 ? null : '姓名不能为空';
                       },
@@ -82,8 +86,7 @@ class _EditPatPage extends State<EditPatPage> {
                       decoration: InputDecoration(
                           labelText: '病历号',
                           suffixIcon: Icon(Icons.settings_overscan),
-                          hintText: '请输入病历号'
-                      ),
+                          hintText: '请输入病历号'),
                       validator: (v) {
                         return v.trim().length > 0 ? null : '病历号不能为空';
                       },
@@ -91,9 +94,7 @@ class _EditPatPage extends State<EditPatPage> {
                     TextFormField(
                       controller: _agePassController,
                       decoration: InputDecoration(
-                          labelText: '年龄',
-                          hintText: '请选择出生年月日'
-                      ),
+                          labelText: '年龄', hintText: '请选择出生年月日'),
                       validator: (v) {
                         if (v.trim().length > 0) {
                           return null;
@@ -115,8 +116,10 @@ class _EditPatPage extends State<EditPatPage> {
                 child: FlatButton(
                   color: Colors.blue,
                   highlightColor: Colors.blue[700],
-                  child: Text('确定', style: TextStyle(color: Colors.white, fontSize: 20)),
-                  shape:RoundedRectangleBorder(borderRadius: BorderRadius.circular(50.0)),
+                  child: Text('确定',
+                      style: TextStyle(color: Colors.white, fontSize: 20)),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(50.0)),
                   onPressed: () {},
                 ),
               ),
@@ -126,5 +129,4 @@ class _EditPatPage extends State<EditPatPage> {
       ),
     );
   }
-
 }

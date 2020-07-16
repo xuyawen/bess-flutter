@@ -6,7 +6,6 @@ class ChangePassPage extends StatefulWidget {
 }
 
 class _ChangePassPage extends State<ChangePassPage> {
-
   TextEditingController _oldPassController = TextEditingController();
   TextEditingController _newOnePassController = TextEditingController();
   TextEditingController _newTwoPassController = TextEditingController();
@@ -30,14 +29,20 @@ class _ChangePassPage extends State<ChangePassPage> {
               alignment: Alignment.centerLeft,
               height: 80,
               decoration: BoxDecoration(
-                border: Border(bottom: BorderSide(color: Colors.grey[100], width: 2, style: BorderStyle.solid)),
+                border: Border(
+                    bottom: BorderSide(
+                        color: Colors.grey[100],
+                        width: 2,
+                        style: BorderStyle.solid)),
               ),
               child: Wrap(
                 spacing: 15,
                 crossAxisAlignment: WrapCrossAlignment.center,
                 children: <Widget>[
-                  Text('登录账号', style: TextStyle(fontSize: 20, color: Colors.grey[500])),
-                  Text('1999999999999', style: TextStyle(fontSize: 20, color: Colors.grey[500])),
+                  Text('登录账号',
+                      style: TextStyle(fontSize: 20, color: Colors.grey[500])),
+                  Text('1999999999999',
+                      style: TextStyle(fontSize: 20, color: Colors.grey[500])),
                 ],
               ),
             ),
@@ -50,20 +55,16 @@ class _ChangePassPage extends State<ChangePassPage> {
                   children: <Widget>[
                     TextFormField(
                       controller: _oldPassController,
-                      decoration: InputDecoration(
-                          labelText: '原密码',
-                          hintText: '请输入原密码'
-                      ),
+                      decoration:
+                          InputDecoration(labelText: '原密码', hintText: '请输入原密码'),
                       validator: (v) {
                         return v.trim().length > 0 ? null : '原密码不能为空';
                       },
                     ),
                     TextFormField(
                       controller: _newOnePassController,
-                      decoration: InputDecoration(
-                          labelText: '新密码',
-                          hintText: '请输入新密码'
-                      ),
+                      decoration:
+                          InputDecoration(labelText: '新密码', hintText: '请输入新密码'),
                       validator: (v) {
                         return v.trim().length > 0 ? null : '新密码不能为空';
                       },
@@ -71,9 +72,7 @@ class _ChangePassPage extends State<ChangePassPage> {
                     TextFormField(
                       controller: _newTwoPassController,
                       decoration: InputDecoration(
-                          labelText: '确认密码',
-                          hintText: '请再次输入新密码'
-                      ),
+                          labelText: '确认密码', hintText: '请再次输入新密码'),
                       validator: (v) {
                         if (v.trim().length > 0) {
                           return null;
@@ -92,7 +91,8 @@ class _ChangePassPage extends State<ChangePassPage> {
             ),
             Container(
               padding: EdgeInsets.only(left: 15),
-              child: Text('忘记原密码？', style: TextStyle(fontSize: 20, color: Colors.blue)),
+              child: Text('忘记原密码？',
+                  style: TextStyle(fontSize: 20, color: Colors.blue)),
             ),
             Container(
               padding: EdgeInsets.all(15),
@@ -101,11 +101,13 @@ class _ChangePassPage extends State<ChangePassPage> {
                 height: 60,
                 width: double.infinity,
                 child: FlatButton(
-                    color: Colors.blue,
-                    highlightColor: Colors.blue[700],
-                    child: Text('确认', style: TextStyle(color: Colors.white, fontSize: 20)),
-                    shape:RoundedRectangleBorder(borderRadius: BorderRadius.circular(50.0)),
-                    onPressed: () {},
+                  color: Colors.blue,
+                  highlightColor: Colors.blue[700],
+                  child: Text('确认',
+                      style: TextStyle(color: Colors.white, fontSize: 20)),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(50.0)),
+                  onPressed: () {},
                 ),
               ),
             ),
@@ -114,5 +116,4 @@ class _ChangePassPage extends State<ChangePassPage> {
       ),
     );
   }
-
 }

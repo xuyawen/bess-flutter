@@ -7,6 +7,7 @@ class EditUserPage extends StatefulWidget {
 class _EditUserPage extends State<EditUserPage> {
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomPadding: false,
       appBar: AppBar(
         title: Text("编辑姓名", style: TextStyle(color: Colors.black)),
         backgroundColor: Colors.white,

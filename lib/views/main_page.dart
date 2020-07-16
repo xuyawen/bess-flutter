@@ -2,16 +2,15 @@ import 'package:flutter/material.dart';
 import 'home/home_page.dart';
 import 'auscultation/auscultation_page.dart';
 import 'mine/mine_page.dart';
-import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 class MainPage extends StatefulWidget {
   @override
   _MainpageState createState() => _MainpageState();
 }
 
-class _MainpageState extends State<MainPage> with SingleTickerProviderStateMixin {
+class _MainpageState extends State<MainPage>
+    with SingleTickerProviderStateMixin {
   PageController pageController;
-  PanelController panel = new PanelController();
 
   int _page = 0;
 
@@ -28,11 +27,7 @@ class _MainpageState extends State<MainPage> with SingleTickerProviderStateMixin
             Scaffold(
               body: PageView(
                 physics: NeverScrollableScrollPhysics(),
-                children: <Widget>[
-                  new HomePage(),
-                  new AuscultationPage(),
-                  new MinePage()
-                ],
+                children: <Widget>[new HomePage(), null, new MinePage()],
                 controller: pageController,
                 onPageChanged: onPageChanged,
               ),
@@ -95,11 +90,12 @@ class _MainpageState extends State<MainPage> with SingleTickerProviderStateMixin
     setState(() {
       this._page = 1;
     });
-    onTap(1);
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (BuildContext context) => new AuscultationPage()));
   }
 
   void onTap(int index) {
     pageController.animateToPage(index,
-        duration: const Duration(milliseconds: 300), curve: Curves.ease);
+        duration: const Duration(milliseconds: 1), curve: Curves.ease);
   }
 }

@@ -24,11 +24,13 @@ class _MinePageState extends State<MinePage> {
                   children: <Widget>[
                     Container(
                       margin: EdgeInsets.only(top: 70, bottom: 10),
-                      child: Text('李医生', style: TextStyle(fontSize: 25, color: Colors.white)),
+                      child: Text('李医生',
+                          style: TextStyle(fontSize: 25, color: Colors.white)),
                     ),
                     Container(
                       margin: EdgeInsets.only(top: 10),
-                      child: Text('当前账号：199999999999', style: TextStyle(fontSize: 18, color: Colors.white)),
+                      child: Text('当前账号：199999999999',
+                          style: TextStyle(fontSize: 18, color: Colors.white)),
                     ),
                     Container(
                       padding: EdgeInsets.only(left: 5, right: 5),
@@ -59,14 +61,13 @@ class _MinePageState extends State<MinePage> {
               decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(8.0),
-                  boxShadow: [ //阴影
+                  boxShadow: [
+                    //阴影
                     BoxShadow(
                         color: Colors.grey,
                         offset: Offset(0.1, 0.1),
-                        blurRadius: 4.0
-                    )
-                  ]
-              ),
+                        blurRadius: 4.0)
+                  ]),
               child: Wrap(
                 children: <Widget>[
                   Flex(
@@ -93,7 +94,10 @@ class _MinePageState extends State<MinePage> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
-                              Text('智能电子听诊器', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                              Text('智能电子听诊器',
+                                  style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold)),
                               Padding(
                                 padding: EdgeInsets.only(top: 7),
                                 child: Text('MAC: f0:01:5b:0a:a5:5a'),
@@ -104,7 +108,7 @@ class _MinePageState extends State<MinePage> {
                       ),
                       Expanded(
                         flex: 3,
-                        child:  UnconstrainedBox(
+                        child: UnconstrainedBox(
                           child: Container(
                             margin: EdgeInsets.only(left: 15),
                             child: Padding(
@@ -114,21 +118,27 @@ class _MinePageState extends State<MinePage> {
                                 children: <Widget>[
                                   Row(
                                     children: <Widget>[
-                                      Icon(Icons.headset_off, size: 15, color: Colors.red),
-                                      Text('100', style: TextStyle(color: Colors.blue))
+                                      Icon(Icons.headset_off,
+                                          size: 15, color: Colors.red),
+                                      Text('100',
+                                          style: TextStyle(color: Colors.blue))
                                     ],
                                   ),
                                   Row(
                                     children: <Widget>[
-                                      Icon(Icons.battery_full, size: 15, color: Colors.blue),
-                                      Text('87', style: TextStyle(color: Colors.blue))
+                                      Icon(Icons.battery_full,
+                                          size: 15, color: Colors.blue),
+                                      Text('87',
+                                          style: TextStyle(color: Colors.blue))
                                     ],
                                   ),
                                 ],
                               ),
                             ),
                             decoration: BoxDecoration(
-                              border: Border.all(color: const Color(0xFFbfe9f0),),
+                              border: Border.all(
+                                color: const Color(0xFFbfe9f0),
+                              ),
                               borderRadius: BorderRadius.circular(8),
                               color: const Color(0xFFe6f4ff),
                             ),
@@ -142,7 +152,11 @@ class _MinePageState extends State<MinePage> {
                     padding: EdgeInsets.only(top: 5),
                     width: double.infinity,
                     decoration: BoxDecoration(
-                      border: Border(top: BorderSide(color: Colors.grey[100], width: 1, style: BorderStyle.solid)),
+                      border: Border(
+                          top: BorderSide(
+                              color: Colors.grey[100],
+                              width: 1,
+                              style: BorderStyle.solid)),
                     ),
                     child: Wrap(
                       crossAxisAlignment: WrapCrossAlignment.center,
@@ -150,7 +164,8 @@ class _MinePageState extends State<MinePage> {
                       spacing: 8,
                       children: <Widget>[
                         Icon(Icons.swap_horizontal_circle, color: Colors.blue),
-                        Text('切换设备', style: TextStyle(fontSize: 18, color: Colors.blue))
+                        Text('切换设备',
+                            style: TextStyle(fontSize: 18, color: Colors.blue))
                       ],
                     ),
                   )
@@ -168,22 +183,21 @@ class _MinePageState extends State<MinePage> {
               decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(8.0),
-                  boxShadow: [ //阴影
+                  boxShadow: [
+                    //阴影
                     BoxShadow(
                         color: Colors.grey,
                         offset: Offset(0.1, 0.1),
-                        blurRadius: 4.0
-                    )
-                  ]
-              ),
+                        blurRadius: 4.0)
+                  ]),
               child: Wrap(
                 spacing: 50,
                 children: <Widget>[
                   // EditPage
                   GestureDetector(
                     onTap: () {
-                      Navigator.of(context)
-                          .push(MaterialPageRoute(builder: (BuildContext context) => EditUserPage()));
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (BuildContext context) => EditUserPage()));
                     },
                     child: Column(
                       children: <Widget>[
@@ -195,7 +209,11 @@ class _MinePageState extends State<MinePage> {
                             color: Colors.yellow,
                             borderRadius: BorderRadius.circular(5.0),
                           ),
-                          child: Icon(Icons.edit, color: Colors.white, size: 25,),
+                          child: Icon(
+                            Icons.edit,
+                            color: Colors.white,
+                            size: 25,
+                          ),
                         ),
                         Text('账号设置')
                       ],
@@ -203,8 +221,8 @@ class _MinePageState extends State<MinePage> {
                   ),
                   GestureDetector(
                     onTap: () {
-                      Navigator.of(context)
-                          .push(MaterialPageRoute(builder: (BuildContext context) => ChangePassPage()));
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (BuildContext context) => ChangePassPage()));
                     },
                     child: Column(
                       children: <Widget>[
@@ -216,7 +234,11 @@ class _MinePageState extends State<MinePage> {
                             color: Colors.yellow,
                             borderRadius: BorderRadius.circular(5.0),
                           ),
-                          child: Icon(Icons.vpn_key, color: Colors.white, size: 25,),
+                          child: Icon(
+                            Icons.vpn_key,
+                            color: Colors.white,
+                            size: 25,
+                          ),
                         ),
                         Text('修改密码')
                       ],
@@ -224,8 +246,8 @@ class _MinePageState extends State<MinePage> {
                   ),
                   GestureDetector(
                     onTap: () {
-                      Navigator.of(context)
-                          .push(MaterialPageRoute(builder: (BuildContext context) => AboutPage()));
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (BuildContext context) => AboutPage()));
                     },
                     child: Column(
                       children: <Widget>[
@@ -237,7 +259,11 @@ class _MinePageState extends State<MinePage> {
                             color: Colors.yellow,
                             borderRadius: BorderRadius.circular(5.0),
                           ),
-                          child: Icon(Icons.info, color: Colors.white, size: 25,),
+                          child: Icon(
+                            Icons.info,
+                            color: Colors.white,
+                            size: 25,
+                          ),
                         ),
                         Text('关于我们')
                       ],
@@ -253,24 +279,28 @@ class _MinePageState extends State<MinePage> {
               decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(8.0),
-                  boxShadow: [ //阴影
+                  boxShadow: [
+                    //阴影
                     BoxShadow(
                         color: Colors.grey,
                         offset: Offset(0.1, 0.1),
-                        blurRadius: 4.0
-                    )
-                  ]
-              ),
+                        blurRadius: 4.0)
+                  ]),
               child: Flex(
                 direction: Axis.horizontal,
                 children: <Widget>[
                   Expanded(
                     flex: 9,
-                    child: Text('退出登录', style: TextStyle(fontSize: 20, color: Colors.yellow)),
+                    child: Text('退出登录',
+                        style: TextStyle(fontSize: 20, color: Colors.yellow)),
                   ),
                   Expanded(
                     flex: 1,
-                    child: Icon(Icons.chevron_right, color: Colors.grey[300], size: 35,),
+                    child: Icon(
+                      Icons.chevron_right,
+                      color: Colors.grey[300],
+                      size: 35,
+                    ),
                   ),
                 ],
               ),
