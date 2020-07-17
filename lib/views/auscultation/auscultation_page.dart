@@ -315,7 +315,8 @@ class _AuscultationPageState extends State<AuscultationPage> {
               child: Text('临时听诊记录',
                   style: TextStyle(color: Colors.white, fontSize: 20)),
               onTap: () {
-                panel.open();
+                Routes.push(context, "/temp-auscultate");
+
               },
             ),
           ),
@@ -327,7 +328,7 @@ class _AuscultationPageState extends State<AuscultationPage> {
           Positioned(
             child: GestureDetector(
               onTap: () {
-                Routes.push(context, "/temp-auscultate");
+                panel.open();
               },
               child: Image.asset("images/hearing.png", width: 120, height: 120),
             ),

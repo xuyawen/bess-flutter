@@ -2,11 +2,12 @@ import 'package:fluro/fluro.dart';
 import 'router_handle.dart';
 
 class Routes {
+
   static Router router;
 
   static void push(context, path) {
     Routes.router
-        .navigateTo(context, path, transition: TransitionType.fadeIn);
+        .navigateTo(context, path, transition: TransitionType.material);
   }
 
   static String root = '/';

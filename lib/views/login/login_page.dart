@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:bess/routes/routers.dart';
 import 'package:bess/common/net.dart';
+import 'package:bess/model/user_info.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -80,7 +82,7 @@ class _LoginPage extends State<LoginPage> {
                               prefixIcon: Icon(Icons.person),
                               border: OutlineInputBorder(
                                 borderRadius:
-                                BorderRadius.all(Radius.circular(10)),
+                                    BorderRadius.all(Radius.circular(10)),
                                 borderSide: BorderSide(
                                   color: Colors.grey[200],
                                 ),
@@ -101,7 +103,7 @@ class _LoginPage extends State<LoginPage> {
                               prefixIcon: Icon(Icons.lock_outline),
                               border: OutlineInputBorder(
                                 borderRadius:
-                                BorderRadius.all(Radius.circular(10)),
+                                    BorderRadius.all(Radius.circular(10)),
                                 borderSide: BorderSide(
                                   color: Colors.grey[200],
                                 ),
@@ -124,15 +126,7 @@ class _LoginPage extends State<LoginPage> {
                                     color: Colors.white, fontSize: 20)),
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(50.0)),
-                            onPressed: () async {
-                              dynamic res = await Net.Login({'Username': 'admin', 'Password': '123123'});
-                              if (res['code'] == 0) {
-                                String _token = res['data'];
-                                print('_token: $_token');
-
-                                Routes.push(context, "/home");
-                              }
-                            },
+                            onPressed: doLogin,
                           ),
                         ),
                       ),
@@ -142,10 +136,14 @@ class _LoginPage extends State<LoginPage> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
                             GestureDetector(
-                              child: Text('什么是账号？', style: TextStyle(fontSize: 16, color: Colors.grey)),
+                              child: Text('什么是账号？',
+                                  style: TextStyle(
+                                      fontSize: 16, color: Colors.grey)),
                             ),
                             GestureDetector(
-                              child: Text('忘记密码？', style: TextStyle(fontSize: 16, color: Colors.grey)),
+                              child: Text('忘记密码？',
+                                  style: TextStyle(
+                                      fontSize: 16, color: Colors.grey)),
                             )
                           ],
                         ),
@@ -157,11 +155,37 @@ class _LoginPage extends State<LoginPage> {
             ),
             Positioned(
               bottom: 20,
-              child: Text('仅服务于内部研究人员使用，账号开通请联系工作人员', style: TextStyle(color: Colors.grey, fontSize: 12)),
+              child: Text('仅服务于内部研究人员使用，账号开通请联系工作人员',
+                  style: TextStyle(color: Colors.grey, fontSize: 12)),
             )
           ],
         ),
       ),
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  void doLogin() async {
+    final prefs = await SharedPreferences.getInstance();
+    dynamic res =
+        await Net.Login({'Username': '18656251252', 'Password': '111111'});
+    if (res['code'] == 0) {
+      String _token = res['data'];
+      prefs.setString('_token', _token);
+      getUserInfo();
+      Routes.push(context, "/home");
+    }
+  }
+
+  void getUserInfo() async {
+    dynamic res = await Net.UserInfo();
+    if (res['code'] == 0) {
+      UserInfo _data = res['data'];
+      print('UserInfo: $_data');
+    }
   }
 }

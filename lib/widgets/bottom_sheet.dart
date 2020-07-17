@@ -1,19 +1,28 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import '../views/home/edit_pat_page.dart';
+import 'package:bess/common/net.dart';
+import 'package:bess/routes/routers.dart';
 
-Future<int> bottomSheet(BuildContext context) {
+Future<int> bottomSheet(BuildContext context, patList) {
   showModalBottomSheet (
     shape: RoundedRectangleBorder(borderRadius: const BorderRadius.vertical(top: Radius.circular(20))),
     isScrollControlled: true,
     context: context,
     builder: (BuildContext bc) {
-      return _sheetWidget(bc);
+      return _sheetWidget(bc, patList);
     });
 }
 
 
-Widget _sheetWidget(context) {
+Widget _sheetWidget(context, patList) {
+
+  void switchPat(index, context) async {
+    dynamic res = await Net.switchPat(patList[index]['ID']);
+    if (res['code'] == 0) {
+      print('res, $res');
+    }
+  }
+
   return SizedBox(
     height: 600,
     child: Container(
@@ -99,8 +108,7 @@ Widget _sheetWidget(context) {
                   child: GestureDetector(
                     child: Text('编辑信息'),
                     onTap: () {
-                      Navigator.of(context)
-                          .push(MaterialPageRoute(builder: (BuildContext context) => EditPatPage()));
+                      Routes.push(context, "/edit-pat");
                     },
                   ),
                 ),
@@ -110,54 +118,59 @@ Widget _sheetWidget(context) {
           Container(
             height: 370,
             child: ListView.builder(
+              itemCount: patList.length,
               itemBuilder: (BuildContext context, int index) {
-                return Container(
-                  height: 70,
-                  padding: EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(8.0),
-                      boxShadow: [ //阴影
-                        BoxShadow(
-                            color: Colors.grey,
-                            offset: Offset(0.1, 0.1),
-                            blurRadius: 4.0
-                        )
-                      ]
-                  ),
-                  margin: EdgeInsets.only(top: index == 0 ? 10 : 0, bottom: 10, left: 20, right: 20),
-                  child: Flex(
-                    direction: Axis.horizontal,
-                    children: <Widget>[
-                      Expanded(
-                        flex: 6,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Wrap(
-                              spacing: 10,
-                              children: <Widget>[
-                                Text('韩磊磊 - $index'),
-                                Icon(Icons.person),
-                                Text('$index岁'),
-                              ],
-                            ),
-                            Text('病历号：10010001001')
-                          ],
-                        ),
-                      ),
-                      Expanded(
-                        flex: 3,
-                        child: GestureDetector(
-                          child: Wrap(
+                return GestureDetector(
+                  onTap: () => switchPat(index, context),
+                  child: Container(
+                    height: 70,
+                    padding: EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(8.0),
+                        boxShadow: [ //阴影
+                          BoxShadow(
+                              color: Colors.grey,
+                              offset: Offset(0.1, 0.1),
+                              blurRadius: 4.0
+                          )
+                        ]
+                    ),
+                    margin: EdgeInsets.only(top: index == 0 ? 10 : 0, bottom: 10, left: 20, right: 20),
+                    child: Flex(
+                      direction: Axis.horizontal,
+                      children: <Widget>[
+                        Expanded(
+                          flex: 6,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
-                              Text('$index次听诊记录'),
-                              Icon(Icons.chevron_right)
+                              Wrap(
+                                spacing: 10,
+                                children: <Widget>[
+                                  Text(patList[index]['Name']),
+//                                Icon(Icons.person),
+                                  Text(patList[index]['Sex'] == 1 ? '男': '女'),
+                                  Text('$index岁'),
+                                ],
+                              ),
+                              Text(patList[index]['RecordNumber'])
                             ],
                           ),
                         ),
-                      ),
-                    ],
+                        Expanded(
+                          flex: 3,
+                          child: GestureDetector(
+                            child: Wrap(
+                              children: <Widget>[
+                                Text('${patList[index]['RecordCount']}次听诊记录'),
+                                Icon(Icons.chevron_right)
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 );
               },
@@ -205,13 +218,3 @@ Widget _sheetWidget(context) {
   );
 }
 
-List<String> nameItems = <String>[
-  '微信',
-  '朋友圈',
-  'QQ',
-  'QQ空间',
-  '微博',
-  'FaceBook',
-  '邮件',
-  '链接'
-];
