@@ -1,8 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:bess/routes/routers.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
-import '../main_page.dart';
-import 'temp_auscultate.dart';
 
 class AuscultationPage extends StatefulWidget {
   @override
@@ -300,8 +299,7 @@ class _AuscultationPageState extends State<AuscultationPage> {
             left: 10,
             child: GestureDetector(
               onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (BuildContext context) => MainPage()));
+                Routes.push(context, "/home");
               },
               child: Icon(
                 Icons.close,
@@ -329,8 +327,7 @@ class _AuscultationPageState extends State<AuscultationPage> {
           Positioned(
             child: GestureDetector(
               onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (BuildContext context) => TempAuscultate()));
+                Routes.push(context, "/temp-auscultate");
               },
               child: Image.asset("images/hearing.png", width: 120, height: 120),
             ),
@@ -356,8 +353,7 @@ class _AuscultationPageState extends State<AuscultationPage> {
             left: 10,
             child: GestureDetector(
               onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (BuildContext context) => MainPage()));
+                Routes.push(context, "/main");
               },
               child: Icon(
                 Icons.close,

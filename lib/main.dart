@@ -1,12 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:fluro/fluro.dart';
+import 'package:bess/routes/routers.dart';
 import 'views/main_page.dart';
 import 'views/prompt_page.dart';
-// import 'components/bottom_navbar.dart';
 
-void main() => runApp(Client());
+class MyApp extends StatefulWidget {
+  MyApp() {
+    final router = Router();
+    Routes.configureRoutes(router);
+    Routes.router = router;
+  }
 
-class Client extends StatelessWidget {
   @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -17,4 +26,7 @@ class Client extends StatelessWidget {
       // home: BottomNavBar(),
     );
   }
+
 }
+
+void main() => runApp(MyApp());

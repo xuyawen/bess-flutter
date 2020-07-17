@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sticky_headers/sticky_headers.dart';
-import 'result_auscultate.dart';
+import 'package:bess/routes/routers.dart';
 
 
 class TempAuscultate extends StatefulWidget {
@@ -116,8 +116,7 @@ class _TempAuscultate extends State<TempAuscultate> {
               flex: 1,
               child: InkWell(
                 onTap: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                    builder: (BuildContext context) => ResultAuscultate()));
+                  Routes.push(context, "/result-auscultate");
                 },
                 child: Icon(Icons.chevron_right),
               ),

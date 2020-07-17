@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:sticky_headers/sticky_headers.dart';
-import '../../widgets/bottom_sheet.dart';
+import 'package:bess/widgets/bottom_sheet.dart';
 
 class HomePage extends StatefulWidget {
   @override

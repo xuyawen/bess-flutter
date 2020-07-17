@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'change_pass_page.dart';
-import 'edit_user_page.dart';
-import 'about_page.dart';
-import '../login/login_page.dart';
+import 'package:bess/routes/routers.dart';
 
 class MinePage extends StatefulWidget {
   @override
@@ -197,8 +194,7 @@ class _MinePageState extends State<MinePage> {
                   // EditPage
                   GestureDetector(
                     onTap: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (BuildContext context) => EditUserPage()));
+                      Routes.push(context, "/edit-user");
                     },
                     child: Column(
                       children: <Widget>[
@@ -222,8 +218,7 @@ class _MinePageState extends State<MinePage> {
                   ),
                   GestureDetector(
                     onTap: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (BuildContext context) => ChangePassPage()));
+                      Routes.push(context, "/change-pass");
                     },
                     child: Column(
                       children: <Widget>[
@@ -247,8 +242,7 @@ class _MinePageState extends State<MinePage> {
                   ),
                   GestureDetector(
                     onTap: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (BuildContext context) => AboutPage()));
+                      Routes.push(context, "/about");
                     },
                     child: Column(
                       children: <Widget>[
@@ -294,9 +288,7 @@ class _MinePageState extends State<MinePage> {
                     flex: 9,
                     child: GestureDetector(
                       onTap: () {
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (BuildContext context) =>
-                                LoginPage()));
+                        Routes.push(context, "/login");
                       },
                       child: Text('退出登录',
                           style: TextStyle(fontSize: 20, color: Colors.yellow)),

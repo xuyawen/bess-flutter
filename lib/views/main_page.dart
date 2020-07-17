@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:bess/routes/routers.dart';
 import 'home/home_page.dart';
-import 'auscultation/auscultation_page.dart';
 import 'mine/mine_page.dart';
 
 class MainPage extends StatefulWidget {
@@ -13,8 +13,7 @@ class _MainpageState extends State<MainPage>
   PageController pageController;
 
   int _page = 0;
-
-  String img = 'images/hearing.png';
+  String buttonIcon = 'images/hearing.png';
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +54,7 @@ class _MainpageState extends State<MainPage>
                     elevation: 0,
                     highlightElevation: 0,
                     backgroundColor: Color(0x0067BFFF),
-                    child: new Image.asset(img),
+                    child: new Image.asset(buttonIcon),
                     onPressed: onAuscultationPage,
                   ),
                 ),
@@ -90,11 +89,11 @@ class _MainpageState extends State<MainPage>
     setState(() {
       this._page = 1;
     });
-    Navigator.of(context).push(MaterialPageRoute(
-        builder: (BuildContext context) => new AuscultationPage()));
+    Routes.push(context, "/auscultate");
   }
 
   void onTap(int index) {
+    if (index == 1) return onAuscultationPage();
     pageController.animateToPage(index,
         duration: const Duration(milliseconds: 1), curve: Curves.ease);
   }

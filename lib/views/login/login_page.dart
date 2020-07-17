@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../common/net.dart';
-import '../main_page.dart';
+import 'package:bess/routes/routers.dart';
+import 'package:bess/common/net.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -129,9 +129,8 @@ class _LoginPage extends State<LoginPage> {
                               if (res['code'] == 0) {
                                 String _token = res['data'];
                                 print('_token: $_token');
-                                Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (BuildContext context) =>
-                                        MainPage()));
+
+                                Routes.push(context, "/home");
                               }
                             },
                           ),
