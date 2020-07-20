@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:bess/routes/routers.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:bess/model/user_info.dart';
+import 'dart:convert';
+//import 'package:flutter_bloc/flutter_bloc.dart';
+//import 'package:bess/blocs/userInfo_bloc.dart';
 
 class MinePage extends StatefulWidget {
   @override
@@ -7,6 +12,23 @@ class MinePage extends StatefulWidget {
 }
 
 class _MinePageState extends State<MinePage> {
+
+  Map<String, dynamic> userInfo;
+
+  @override
+  void initState() {
+    initAsync();
+    super.initState();
+  }
+
+  void initAsync() async {
+    final prefs = await SharedPreferences.getInstance();
+    Map<String, dynamic> userInfoState = jsonDecode(prefs.getString('_userInfo'));
+    setState(() {
+      userInfo = userInfoState;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,13 +45,13 @@ class _MinePageState extends State<MinePage> {
                     children: <Widget>[
                       Container(
                         margin: EdgeInsets.only(top: 70, bottom: 10),
-                        child: Text('李医生',
+                        child: Text(userInfo != null ? '${userInfo["User"]["Name"]}' : '',
                             style:
                                 TextStyle(fontSize: 25, color: Colors.white)),
                       ),
                       Container(
                         margin: EdgeInsets.only(top: 10),
-                        child: Text('当前账号：199999999999',
+                        child: Text('当前账号：${userInfo != null ? '${userInfo["User"]["Username"]}' : ''}',
                             style:
                                 TextStyle(fontSize: 18, color: Colors.white)),
                       ),
@@ -44,7 +66,7 @@ class _MinePageState extends State<MinePage> {
                           spacing: 6,
                           children: <Widget>[
                             Icon(Icons.local_hospital, color: Colors.black),
-                            Text('角色-医生', style: TextStyle(color: Colors.black))
+                            Text('角色-${userInfo != null ? (userInfo["User"]["Role"] as int) == 1 ? '管理员' : '医生' : ''}', style: TextStyle(color: Colors.black))
                           ],
                         ),
                       )
@@ -96,13 +118,13 @@ class _MinePageState extends State<MinePage> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
-                                Text('智能电子听诊器',
+                                Text('${userInfo != null ? '${userInfo["Device"]["Name"]}' : ''}',
                                     style: TextStyle(
                                         fontSize: 18,
                                         fontWeight: FontWeight.bold)),
                                 Padding(
                                   padding: EdgeInsets.only(top: 7),
-                                  child: Text('MAC: f0:01:5b:0a:a5:5a'),
+                                  child: Text('MAC: ${userInfo != null ? '${userInfo["Device"]["Mac"]}' : ''}'),
                                 ),
                               ],
                             ),

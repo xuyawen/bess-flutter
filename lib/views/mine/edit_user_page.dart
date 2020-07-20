@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:bess/common/net.dart';
 
 class EditUserPage extends StatefulWidget {
   _EditUserPage createState() => _EditUserPage();
 }
 
 class _EditUserPage extends State<EditUserPage> {
+  String _name = '';
+
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomPadding: false,
@@ -20,6 +23,11 @@ class _EditUserPage extends State<EditUserPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             TextField(
+                onChanged: (val) {
+                  setState(() {
+                    _name = val;
+                  });
+                },
                 decoration: InputDecoration(
                     labelText: "姓名",
                     hintText: "请输入姓名"
@@ -39,8 +47,8 @@ class _EditUserPage extends State<EditUserPage> {
                   color: Colors.blue,
                   highlightColor: Colors.blue[700],
                   child: Text('确认', style: TextStyle(color: Colors.white, fontSize: 20)),
-                  shape:RoundedRectangleBorder(borderRadius: BorderRadius.circular(50.0)),
-                  onPressed: () {},
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50.0)),
+                  onPressed: updateUserName,
                 ),
               ),
             )
@@ -48,5 +56,12 @@ class _EditUserPage extends State<EditUserPage> {
         ),
       ),
     );
+  }
+
+  void updateUserName() async {
+    var res = await Net.updateUserName(_name);
+    if (res['code'] == 0) {
+      print(res);
+    }
   }
 }

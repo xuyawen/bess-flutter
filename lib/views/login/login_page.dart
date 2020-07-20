@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:bess/routes/routers.dart';
 import 'package:bess/common/net.dart';
-import 'package:bess/model/user_info.dart';
+import 'dart:convert';
+//import 'package:bess/model/user_info.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:bess/blocs/userInfo_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
@@ -10,11 +13,39 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPage extends State<LoginPage> {
+  dynamic prefs;
+
   TextEditingController _userController = TextEditingController();
   TextEditingController _passController = TextEditingController();
   GlobalKey _formKey = GlobalKey<FormState>();
 
   Widget build(BuildContext context) {
+//    final UserInfoBloc userInfoBloc = BlocProvider.of<UserInfoBloc>(context);
+
+    void getUserInfo() async {
+      dynamic res = await Net.UserInfo();
+      if (res['code'] == 0) {
+        Object _data = res['data'];
+        prefs.setString('_userInfo', jsonEncode(_data));
+//        userInfoBloc.add(UserInfoEvent(_data));
+        print('UserInfo: $_data');
+      }
+    }
+
+    void doLogin() async {
+      prefs = await SharedPreferences.getInstance();
+      dynamic res = await Net.Login(
+          {'Username': _userController.text, 'Password': _passController.text});
+      if (res['code'] == 0) {
+        String _token = res['data'];
+        prefs.setString('_token', _token);
+        getUserInfo();
+        Routes.push(context, "/home");
+      } else {
+        print(res);
+      }
+    }
+
     return Scaffold(
       resizeToAvoidBottomPadding: false,
       body: Container(
@@ -88,7 +119,7 @@ class _LoginPage extends State<LoginPage> {
                                 ),
                               )),
                           validator: (v) {
-                            return v.trim().length > 0 ? null : '';
+                            return v.trim().isEmpty ? '' : null;
                           },
                         ),
                       ),
@@ -109,7 +140,7 @@ class _LoginPage extends State<LoginPage> {
                                 ),
                               )),
                           validator: (v) {
-                            return v.trim().length > 0 ? null : '';
+                            return v.trim().isEmpty ? '' : null;
                           },
                         ),
                       ),
@@ -167,25 +198,7 @@ class _LoginPage extends State<LoginPage> {
   @override
   void initState() {
     super.initState();
-  }
-
-  void doLogin() async {
-    final prefs = await SharedPreferences.getInstance();
-    dynamic res =
-        await Net.Login({'Username': '18656251252', 'Password': '111111'});
-    if (res['code'] == 0) {
-      String _token = res['data'];
-      prefs.setString('_token', _token);
-      getUserInfo();
-      Routes.push(context, "/home");
-    }
-  }
-
-  void getUserInfo() async {
-    dynamic res = await Net.UserInfo();
-    if (res['code'] == 0) {
-      UserInfo _data = res['data'];
-      print('UserInfo: $_data');
-    }
+    _userController.text = '18656251252';
+    _passController.text = '111111';
   }
 }

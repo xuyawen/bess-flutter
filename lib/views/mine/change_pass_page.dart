@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:bess/common/net.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:bess/routes/routers.dart';
+import 'dart:convert';
 
 class ChangePassPage extends StatefulWidget {
   @override
@@ -6,10 +10,36 @@ class ChangePassPage extends StatefulWidget {
 }
 
 class _ChangePassPage extends State<ChangePassPage> {
+  Map<String, dynamic> userInfo;
+
   TextEditingController _oldPassController = TextEditingController();
   TextEditingController _newOnePassController = TextEditingController();
   TextEditingController _newTwoPassController = TextEditingController();
   GlobalKey _formKey = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    initAsync();
+    super.initState();
+  }
+
+  void initAsync() async {
+    final prefs = await SharedPreferences.getInstance();
+    Map<String, dynamic> userInfoState = jsonDecode(prefs.getString('_userInfo'));
+    setState(() {
+      userInfo = userInfoState;
+    });
+  }
+
+  void updatePass() async {
+    dynamic res = await Net.updatePass(_oldPassController.text, _newTwoPassController.text);
+    if (res['code'] == 0) {
+      print('updatePass: $res');
+      Navigator.of(context).pop();
+    } else {
+      print('updatePass: $res');
+    }
+  }
 
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,7 +71,7 @@ class _ChangePassPage extends State<ChangePassPage> {
                 children: <Widget>[
                   Text('登录账号',
                       style: TextStyle(fontSize: 20, color: Colors.grey[500])),
-                  Text('1999999999999',
+                  Text('${userInfo != null ? '${userInfo["User"]["Username"]}' : ''}',
                       style: TextStyle(fontSize: 20, color: Colors.grey[500])),
                 ],
               ),
@@ -55,6 +85,7 @@ class _ChangePassPage extends State<ChangePassPage> {
                   children: <Widget>[
                     TextFormField(
                       controller: _oldPassController,
+                      obscureText: true,
                       decoration:
                           InputDecoration(labelText: '原密码', hintText: '请输入原密码'),
                       validator: (v) {
@@ -63,6 +94,7 @@ class _ChangePassPage extends State<ChangePassPage> {
                     ),
                     TextFormField(
                       controller: _newOnePassController,
+                      obscureText: true,
                       decoration:
                           InputDecoration(labelText: '新密码', hintText: '请输入新密码'),
                       validator: (v) {
@@ -71,6 +103,7 @@ class _ChangePassPage extends State<ChangePassPage> {
                     ),
                     TextFormField(
                       controller: _newTwoPassController,
+                      obscureText: true,
                       decoration: InputDecoration(
                           labelText: '确认密码', hintText: '请再次输入新密码'),
                       validator: (v) {
@@ -107,7 +140,7 @@ class _ChangePassPage extends State<ChangePassPage> {
                       style: TextStyle(color: Colors.white, fontSize: 20)),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(50.0)),
-                  onPressed: () {},
+                  onPressed: updatePass,
                 ),
               ),
             ),

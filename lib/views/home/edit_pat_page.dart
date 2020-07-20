@@ -1,15 +1,36 @@
-import 'package:flutter/cupertino.dart';
+import 'package:bess/common/net.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_cupertino_date_picker/flutter_cupertino_date_picker.dart';
+
 
 class EditPatPage extends StatefulWidget {
   _EditPatPage createState() => _EditPatPage();
 }
 
 class _EditPatPage extends State<EditPatPage> {
+
+  int sex = 0;
+
   TextEditingController _nameController = TextEditingController();
   TextEditingController _qrcodeController = TextEditingController();
   TextEditingController _ageController = TextEditingController();
   GlobalKey _formKey = GlobalKey<FormState>();
+
+  void addPat() async {
+    Map<String, dynamic> patInfo = {
+      "Name": _nameController.text,
+      "Sex": sex,
+      "Birthday": _ageController.text,
+      "RecordNumber": _qrcodeController.text,
+    };
+    dynamic res = await Net.addPat(patInfo);
+    if (res['code'] == 0) {
+      print('addPat: $res');
+      Navigator.of(context).pop();
+    } else {
+      print('addPat: $res');
+    }
+  }
 
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,31 +57,45 @@ class _EditPatPage extends State<EditPatPage> {
                 children: <Widget>[
                   Expanded(
                     flex: 1,
-                    child: Wrap(
-                      spacing: 8,
-                      crossAxisAlignment: WrapCrossAlignment.center,
-                      alignment: WrapAlignment.center,
-                      children: <Widget>[
-                        Icon(Icons.account_circle,
-                            size: 50, color: Colors.pinkAccent),
-                        Text('女',
-                            style: TextStyle(
-                                color: Colors.pinkAccent, fontSize: 20))
-                      ],
+                    child: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          sex = 2;
+                        });
+                      },
+                      child: Wrap(
+                        spacing: 8,
+                        crossAxisAlignment: WrapCrossAlignment.center,
+                        alignment: WrapAlignment.center,
+                        children: <Widget>[
+                          Icon(Icons.account_circle,
+                              size: 50, color: sex == 2 ? Colors.pinkAccent :Colors.grey),
+                          Text('女',
+                              style: TextStyle(
+                                  color: Colors.pinkAccent, fontSize: 20))
+                        ],
+                      ),
                     ),
                   ),
                   Expanded(
                     flex: 1,
-                    child: Wrap(
-                      spacing: 8,
-                      crossAxisAlignment: WrapCrossAlignment.center,
-                      alignment: WrapAlignment.center,
-                      children: <Widget>[
-                        Icon(Icons.account_circle,
-                            size: 50, color: Colors.blue),
-                        Text('男',
-                            style: TextStyle(color: Colors.blue, fontSize: 20))
-                      ],
+                    child: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          sex = 1;
+                        });
+                      },
+                      child: Wrap(
+                        spacing: 8,
+                        crossAxisAlignment: WrapCrossAlignment.center,
+                        alignment: WrapAlignment.center,
+                        children: <Widget>[
+                          Icon(Icons.account_circle,
+                              size: 50, color: sex == 1 ? Colors.blue :Colors.grey),
+                          Text('男',
+                              style: TextStyle(color: Colors.blue, fontSize: 20))
+                        ],
+                      ),
                     ),
                   )
                 ],
@@ -92,6 +127,25 @@ class _EditPatPage extends State<EditPatPage> {
                       },
                     ),
                     TextFormField(
+                      onTap: () {
+                        DatePicker.showDatePicker(
+                          context,
+                          pickerTheme: DateTimePickerTheme(
+                            showTitle: true,
+                            confirm: Text('确定', style: TextStyle(color: Colors.red)),
+                            cancel: Text('取消', style: TextStyle(color: Colors.cyan)),
+                          ),
+                          initialDateTime: DateTime.now(), //当前日期
+                          dateFormat: 'yyyy-MMMM-dd',  //显示格式
+                          locale: DateTimePickerLocale.zh_cn, //语言 默认DateTimePickerLocale.en_us
+                          onConfirm: (dateTime, List<int> index) { //确定的时候
+                            setState(() {
+                              _ageController.text = dateTime.toString().split(" ")[0];
+                            });
+                          },
+                        );
+                      },
+                      readOnly: true,
                       controller: _ageController,
                       decoration: InputDecoration(
                           labelText: '年龄', hintText: '请选择出生年月日'),
@@ -120,7 +174,7 @@ class _EditPatPage extends State<EditPatPage> {
                       style: TextStyle(color: Colors.white, fontSize: 20)),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(50.0)),
-                  onPressed: () {},
+                  onPressed: addPat,
                 ),
               ),
             )

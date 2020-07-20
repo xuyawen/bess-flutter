@@ -58,7 +58,7 @@ var resultAuscultateHandle = Handler(
 // 临时听诊记录
 var tempAuscultateHandle = Handler(
     handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-      return TempAuscultate();
+      return TempAusculState();
     }
 );
 

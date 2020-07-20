@@ -51,4 +51,45 @@ class Net {
       return res ? res : err;
     }
   }
+
+  // 临时听诊记录
+  static Future getTempRecordList() async {
+    var res = await NetBase.get(API.TEMP_RECORD_LIST);
+    try {
+      return res;
+    } catch(err) {
+      return res ? res : err;
+    }
+  }
+
+  // 修改账号姓名
+  static Future updateUserName(String name) async {
+    var res = await NetBase.post(API.UPDATE_USER_NAME, {"Name": name});
+    try {
+      return res;
+    } catch(err) {
+      return res ? res : err;
+    }
+  }
+
+  // 修改密码
+  static Future updatePass(String OldPass, String NewPass) async {
+    var res = await NetBase.post(API.UPDATE_PASS, {"OldPass": OldPass, "NewPass": NewPass});
+    try {
+      return res;
+    } catch(err) {
+      return res ? res : err;
+    }
+  }
+
+  // 添加患者
+  static Future addPat(Map<String, dynamic> patInfo) async {
+    var res = await NetBase.post(API.ADD_PAT, patInfo);
+    try {
+      return res;
+    } catch(err) {
+      return res ? res : err;
+    }
+  }
+
 }

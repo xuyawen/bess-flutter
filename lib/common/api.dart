@@ -10,4 +10,12 @@ class API {
   static const String SWITCH_PAT = BASE_URL + '/app/patient/switch/';
   // 患者听诊记录列表
   static const String RECORD_LIST = BASE_URL + '/app/record/list/';
+  // 临时听诊记录
+  static const String TEMP_RECORD_LIST = BASE_URL + '/app/record/list-tmp';
+  // 临时听诊记录
+  static const String UPDATE_USER_NAME = BASE_URL + '/app/user';
+  // 修改密码
+  static const String UPDATE_PASS = BASE_URL + '/app/pass';
+  // 添加患者
+  static const String ADD_PAT = BASE_URL + '/app/patient/add';
 }

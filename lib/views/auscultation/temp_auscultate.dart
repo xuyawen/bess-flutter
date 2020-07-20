@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:sticky_headers/sticky_headers.dart';
 import 'package:bess/routes/routers.dart';
+import 'package:bess/common/net.dart';
 
 
-class TempAuscultate extends StatefulWidget {
+class TempAusculState extends StatefulWidget {
   @override
-  _TempAuscultate createState() => _TempAuscultate();
+  _TempAusculState createState() => _TempAusculState();
 }
 
-class _TempAuscultate extends State<TempAuscultate> {
+class _TempAusculState extends State<TempAusculState> {
+
+  List<dynamic> patRecordList = List();
 
   List data=[{
     "date":"昨天 4月23日",
@@ -36,6 +39,38 @@ class _TempAuscultate extends State<TempAuscultate> {
       "E分组1","E分组1","E分组1","E分组1","E分组1","E分组1"
     ]
   }];
+
+  @override
+  void initState() {
+    super.initState();
+    initAsync();
+  }
+
+  void initAsync() async {
+    List recordList = List();
+    dynamic res = await Net.getTempRecordList();
+    if (res['code'] == 0) {
+      Object _data = res['data']['list'];
+      for (var item in _data) {
+        String key = item['UpdatedAt'].substring(0, 10);
+        var index = recordList.indexWhere((e) => e['date'] == key);
+        if (index != -1) {
+          recordList[index]['list'].add(item);
+        } else {
+          Map<String, dynamic> mapData = Map();
+          List list = List();
+          list.add(item);
+          mapData['list'] = list;
+          mapData['date'] = key;
+          recordList.add(mapData);
+        }
+      }
+      print(recordList);
+      setState(() {
+        patRecordList = recordList;
+      });
+    }
+  }
 
   Widget build(BuildContext context) {
     return Scaffold(
