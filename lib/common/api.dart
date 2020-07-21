@@ -18,4 +18,6 @@ class API {
   static const String UPDATE_PASS = BASE_URL + '/app/pass';
   // 添加患者
   static const String ADD_PAT = BASE_URL + '/app/patient/add';
+  // 修改患者信息
+  static const String UPDATE_PAT = BASE_URL + '/app/patient/update';
 }

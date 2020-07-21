@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:fluro/fluro.dart';
 import 'package:bess/routes/routers.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:bess/common/global.dart';
 //import 'views/main_page.dart';
 //import 'views/prompt_page.dart';
 
@@ -40,4 +41,7 @@ class _MyAppState extends State<MyApp> {
 
 }
 
-void main() => runApp(MyApp());
+void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  Global.init().then((_) => runApp(MyApp()));
+}

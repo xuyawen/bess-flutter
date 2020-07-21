@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:bess/routes/routers.dart';
 import 'package:bess/common/net.dart';
 import 'dart:convert';
-//import 'package:bess/model/user_info.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:bess/blocs/userInfo_bloc.dart';
+import 'package:bess/models/index.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
@@ -25,8 +23,8 @@ class _LoginPage extends State<LoginPage> {
     void getUserInfo() async {
       dynamic res = await Net.UserInfo();
       if (res['code'] == 0) {
-        Object _data = res['data'];
-        prefs.setString('_userInfo', jsonEncode(_data));
+        UserData _data = UserData.fromJson(res['data']);
+        prefs.setString('_userData', jsonEncode(_data));
 //        userInfoBloc.add(UserInfoEvent(_data));
         print('UserInfo: $_data');
       }

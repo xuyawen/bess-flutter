@@ -37,7 +37,9 @@ var homeHandle = Handler(
 // 编辑患者
 var editPatHandle = Handler(
     handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-      return EditPatPage();
+      String type = params["type"].first;
+      String uid = params["uid"]?.first;
+      return EditPatPage(type, uid);
     }
 );
 

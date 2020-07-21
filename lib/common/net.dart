@@ -92,4 +92,14 @@ class Net {
     }
   }
 
+  // 修改患者信息
+  static Future updatePat(Map<String, dynamic> patInfo) async {
+    var res = await NetBase.post(API.UPDATE_PAT, patInfo);
+    try {
+      return res;
+    } catch(err) {
+      return res ? res : err;
+    }
+  }
+
 }

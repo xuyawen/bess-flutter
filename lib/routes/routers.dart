@@ -5,16 +5,15 @@ class Routes {
 
   static Router router;
 
-  static void push(context, path) {
-    Routes.router
-        .navigateTo(context, path, transition: TransitionType.material);
+  static Future push(context, path) {
+    return Routes.router.navigateTo(context, path, transition: TransitionType.material);
   }
 
   static String root = '/';
   static String login = '/login';
   static String firstLogin = '/first-login';
   static String home = '/home';
-  static String editPat = '/edit-pat';
+  static String editPat = '/edit-pat/:type/:uid';
   static String auscultate = '/auscultate';
   static String resultAuscultate = '/result-auscultate';
   static String tempAuscultate = '/temp-auscultate';

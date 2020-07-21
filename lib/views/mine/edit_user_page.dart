@@ -1,12 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:bess/common/net.dart';
+import 'package:bess/event/event_bus.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
 
 class EditUserPage extends StatefulWidget {
   _EditUserPage createState() => _EditUserPage();
 }
 
 class _EditUserPage extends State<EditUserPage> {
+  EventBus bus = EventBus();
+  SharedPreferences prefs;
+
   String _name = '';
+  @override
+  void initState() {
+    initAsync();
+    super.initState();
+  }
+
+  void initAsync() async {
+    prefs = await SharedPreferences.getInstance();
+    Map<String, dynamic> userInfo = jsonDecode(prefs.getString('_userData'));
+    setState(() {
+      _name = userInfo["User"]["Name"];
+    });
+  }
 
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,15 +42,23 @@ class _EditUserPage extends State<EditUserPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             TextField(
-                onChanged: (val) {
-                  setState(() {
-                    _name = val;
-                  });
-                },
-                decoration: InputDecoration(
-                    labelText: "姓名",
-                    hintText: "请输入姓名"
-                )
+              autofocus: true,
+              controller: TextEditingController.fromValue(TextEditingValue(
+              text: '${this._name == null ? "" : this._name}',  //判断keyword是否为空
+
+              selection: TextSelection.fromPosition(// 保持光标在最后
+                  TextPosition(
+                  affinity: TextAffinity.downstream,
+                  offset: '${this._name}'.length)))),
+              onChanged: (val) {
+                setState(() {
+                  _name = val;
+                });
+              },
+              decoration: InputDecoration(
+                  labelText: "姓名",
+                  hintText: "请输入姓名"
+              )
             ),
             Padding(
               padding: EdgeInsets.only(top: 10),
@@ -61,7 +88,8 @@ class _EditUserPage extends State<EditUserPage> {
   void updateUserName() async {
     var res = await Net.updateUserName(_name);
     if (res['code'] == 0) {
-      print(res);
+      Navigator.of(context).pop();
+      bus.emit('changeUserName', _name);
     }
   }
 }

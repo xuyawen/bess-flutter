@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:bess/routes/routers.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:bess/model/user_info.dart';
 import 'dart:convert';
-//import 'package:flutter_bloc/flutter_bloc.dart';
-//import 'package:bess/blocs/userInfo_bloc.dart';
+import 'package:bess/event/event_bus.dart';
 
 class MinePage extends StatefulWidget {
   @override
@@ -12,18 +10,33 @@ class MinePage extends StatefulWidget {
 }
 
 class _MinePageState extends State<MinePage> {
-
+  EventBus bus = EventBus();
+  SharedPreferences prefs;
   Map<String, dynamic> userInfo;
 
   @override
   void initState() {
     initAsync();
     super.initState();
+    bus.on('changeUserName', (arg) => onChangeUserName(arg));
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    bus.off('changeUserName');
+  }
+
+  void onChangeUserName(name) {
+    setState(() {
+      userInfo["User"]["Name"] = name;
+      prefs.setString('_userData', jsonEncode(userInfo));
+    });
   }
 
   void initAsync() async {
-    final prefs = await SharedPreferences.getInstance();
-    Map<String, dynamic> userInfoState = jsonDecode(prefs.getString('_userInfo'));
+    prefs = await SharedPreferences.getInstance();
+    Map<String, dynamic> userInfoState = jsonDecode(prefs.getString('_userData'));
     setState(() {
       userInfo = userInfoState;
     });

@@ -5,7 +5,11 @@ import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:sticky_headers/sticky_headers.dart';
 import 'package:bess/widgets/bottom_sheet.dart';
 import 'package:bess/common/net.dart';
-import 'package:bess/model/pat_list.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
+import 'package:bess/utils/util.dart';
+import 'package:bess/event/event_bus.dart';
+import 'package:bess/common/global.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -13,35 +17,77 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  EventBus bus = EventBus();
   PanelController panel = new PanelController();
-
-  List data = [
-    {
-      "date": "昨天 4月23日",
-      "group": ["A分组1", "A分组1", "A分组1", "A分组1", "A分组1", "A分组1"]
-    },
-    {
-      "date": "4月13日 星期一",
-      "group": ["B分组1", "B分组1", "B分组1", "B分组1", "B分组1", "B分组1"]
-    },
-    {
-      "date": "4月14日 星期二",
-      "group": ["C分组1", "C分组1", "C分组1", "C分组1", "C分组1", "C分组1"]
-    },
-    {
-      "date": "4月14日 星期二",
-      "group": ["D分组1", "D分组1", "D分组1", "D分组1", "D分组1", "D分组1"]
-    },
-    {
-      "date": "4月14日 星期二",
-      "group": ["E分组1", "E分组1", "E分组1", "E分组1", "E分组1", "E分组1"]
-    }
-  ];
-
   List patList = List();
   List patRecordList = List();
+  Map<String, dynamic> userInfo;
 
-  // GlobalKey key = GlobalKey();
+  @override
+  void initState() {
+    super.initState();
+    initAsync();
+    getPatList();
+    bus.on('changePat', (arg) {
+      getRecordList(arg["ID"]);
+      setState(() {
+        userInfo["Patient"] = arg;
+        Global.saveUserData(userInfo);
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    bus.off('changePat');
+  }
+
+  void initAsync() async {
+    final prefs = await SharedPreferences.getInstance();
+    Map<String, dynamic> userInfoState =
+    jsonDecode(prefs.getString('_userInfo'));
+    int patId = userInfoState["Patient"]["ID"];
+    getRecordList(patId);
+    setState(() {
+      userInfo = userInfoState;
+    });
+  }
+
+  void getPatList() async {
+    dynamic res = await Net.getPatList();
+    if (res['code'] == 0) {
+      Object _data = res['data']['list'];
+      setState(() {
+        patList = _data;
+      });
+    }
+  }
+
+  void getRecordList(patId) async {
+    List recordList = List();
+    dynamic res = await Net.getRecordList(patId);
+    if (res['code'] == 0) {
+      Object _data = res['data']['list'];
+      for (var item in _data) {
+        String key = item['UpdatedAt'].substring(0, 10);
+        var index = recordList.indexWhere((e) => e['date'] == key);
+        if (index != -1) {
+          recordList[index]['list'].add(item);
+        } else {
+          Map<String, dynamic> mapData = Map();
+          List list = List();
+          list.add(item);
+          mapData['list'] = list;
+          mapData['date'] = key;
+          recordList.add(mapData);
+        }
+      }
+      setState(() {
+        patRecordList = recordList;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -81,22 +127,26 @@ class _HomePageState extends State<HomePage> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
-                            Row(
-                              mainAxisSize: MainAxisSize.max,
+                            Wrap(
+                              crossAxisAlignment: WrapCrossAlignment.center,
+                              spacing: 8,
                               children: <Widget>[
-                                Text('韩磊磊',
+                                Text('${userInfo != null ? userInfo["Patient"]["Name"] : ''}',
                                     style: TextStyle(
                                         color: Colors.white, fontSize: 18)),
                                 Icon(
-                                  Icons.person_outline,
-                                  color: Colors.white,
-                                  size: 20,
-                                ),
-                                Text('6岁',
+                                    userInfo != null && userInfo["Patient"]['Sex'] == 1
+                                        ? Icons.person
+                                        : Icons.person,
+                                    color: userInfo != null && userInfo["Patient"]['Sex'] == 1
+                                        ? Colors.white
+                                        : Colors.pinkAccent),
+                                Text(
+                                    '${userInfo != null ? getAge(userInfo["Patient"]["Birthday"]) : 0}岁',
                                     style: TextStyle(color: Colors.white)),
                               ],
                             ),
-                            Text('病历号：10010001001001',
+                            Text('病历号：${userInfo != null ? userInfo["Patient"]["RecordNumber"] : ''}',
                                 style: TextStyle(color: Colors.white)),
                           ],
                         ),
@@ -134,7 +184,7 @@ class _HomePageState extends State<HomePage> {
                                 spacing: 10.0,
                                 crossAxisAlignment: WrapCrossAlignment.center,
                                 children: <Widget>[
-                                  Text('LD-DS-20'),
+                                  Text(userInfo != null ? userInfo["Device"]["Name"] : ''),
                                   Icon(Icons.check_circle,
                                       size: 15, color: Colors.blue),
                                   Text('准备就绪',
@@ -143,7 +193,7 @@ class _HomePageState extends State<HomePage> {
                               ),
                               Padding(
                                 padding: EdgeInsets.only(top: 10.0),
-                                child: Text('f0:01:5b:0a:a5:5a',
+                                child: Text(userInfo != null ? userInfo["Device"]["Mac"] : '',
                                     style: TextStyle(color: Colors.grey)),
                               ),
                             ],
@@ -214,7 +264,7 @@ class _HomePageState extends State<HomePage> {
                 child: MediaQuery.removePadding(
                   removeTop: true,
                   context: context,
-                  child: patRecordList.length != 0
+                  child: patRecordList.isNotEmpty
                       ? ListView.builder(
                           itemCount: patRecordList.length,
                           itemBuilder: (context, index) {
@@ -238,7 +288,7 @@ class _HomePageState extends State<HomePage> {
                               ),
                             );
                           })
-                      : Text('加载中...'),
+                      : Padding(padding: EdgeInsets.only(top: 10),child: Text('暂无数据')),
                 ),
               ),
             ]),
@@ -406,48 +456,6 @@ class _HomePageState extends State<HomePage> {
         ],
       );
     }).toList();
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    getPatList();
-    getRecordList(163);
-  }
-
-  void getPatList() async {
-    dynamic res = await Net.getPatList();
-    if (res['code'] == 0) {
-      Object _data = res['data']['list'];
-      setState(() {
-        patList = _data;
-      });
-    }
-  }
-
-  void getRecordList(patId) async {
-    List recordList = List();
-    dynamic res = await Net.getRecordList(patId);
-    if (res['code'] == 0) {
-      Object _data = res['data']['list'];
-      for (var item in _data) {
-        String key = item['UpdatedAt'].substring(0, 10);
-        var index = recordList.indexWhere((e) => e['date'] == key);
-        if (index != -1) {
-          recordList[index]['list'].add(item);
-        } else {
-          Map<String, dynamic> mapData = Map();
-          List list = List();
-          list.add(item);
-          mapData['list'] = list;
-          mapData['date'] = key;
-          recordList.add(mapData);
-        }
-      }
-      setState(() {
-        patRecordList = recordList;
-      });
-    }
   }
 }
 

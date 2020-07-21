@@ -25,7 +25,7 @@ class _ChangePassPage extends State<ChangePassPage> {
 
   void initAsync() async {
     final prefs = await SharedPreferences.getInstance();
-    Map<String, dynamic> userInfoState = jsonDecode(prefs.getString('_userInfo'));
+    Map<String, dynamic> userInfoState = jsonDecode(prefs.getString('_userData'));
     setState(() {
       userInfo = userInfoState;
     });

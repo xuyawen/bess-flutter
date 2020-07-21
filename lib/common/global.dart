@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'dart:convert';
+import 'package:bess/models/index.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 // 提供五套可选主题色
 const _themes = <MaterialColor>[
   Colors.blue,
@@ -11,7 +12,11 @@ const _themes = <MaterialColor>[
 ];
 
 class Global {
+  // 保存用户信息
+  static UserData _userData;
+
   static SharedPreferences _prefs;
+
   // 可选的主题列表
   static List<MaterialColor> get themes => _themes;
 
@@ -22,6 +27,18 @@ class Global {
   static Future init() async {
     _prefs = await SharedPreferences.getInstance();
     var _profile = _prefs.getString("profile");
-    print('_profile: $_profile');
+    if (_profile != null) {
+      try {
+        _userData = UserData.fromJson(jsonDecode(_profile));
+        print('_userData: $_userData');
+      } catch (e) {
+        print(e);
+      }
+    }
+  }
+
+  // 保存 userData
+  static saveUserData(userData) {
+    _prefs.setString("_userData", jsonEncode(userData));
   }
 }

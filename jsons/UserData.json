@@ -1,0 +1,23 @@
+{
+  "Device": {
+    "ID": 1,
+    "Name": "LD-DS-20",
+    "SN": "123456",
+    "Mac": "00:02:5B:00:A5:A5",
+    "UpdatedAt": "2020-07-15 17:32:30",
+    "CreatedAt": "2020-06-01 11:26:43"
+  },
+  "Patient": {
+    "ID": 192,
+    "Name": "test01",
+    "Sex": 2,
+    "Birthday": "2010-07-20",
+    "RecordNumber": "12345678901"
+  },
+  "User": {
+    "Username": "18656251252",
+    "Name": "蘇甦苏123",
+    "Status": 1,
+    "Role": 2
+  }
+}
