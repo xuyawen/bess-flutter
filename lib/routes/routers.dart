@@ -13,7 +13,7 @@ class Routes {
   static String login = '/login';
   static String firstLogin = '/first-login';
   static String home = '/home';
-  static String editPat = '/edit-pat/:type/:uid';
+  static String editPat = '/edit-pat/:type';
   static String auscultate = '/auscultate';
   static String resultAuscultate = '/result-auscultate';
   static String tempAuscultate = '/temp-auscultate';
@@ -21,6 +21,7 @@ class Routes {
   static String editUser = '/edit-user';
   static String changePass = '/change-pass';
   static String about = '/about';
+  static String demo = '/demo';
 
   static void configureRoutes(Router router) {
     router.define(login, handler: loginHandle);
@@ -34,5 +35,6 @@ class Routes {
     router.define(editUser, handler: editUserHandle);
     router.define(changePass, handler: changePassHandle);
     router.define(about, handler: aboutHandle);
+//    router.define(demo, handler: demoHandle);
   }
 }

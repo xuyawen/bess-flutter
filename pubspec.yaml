@@ -34,8 +34,9 @@ dependencies:
   path_provider: ^1.6.11
   dio_cookie_manager: 1.0.0
   fluro: ^1.6.3
-  flutter_bloc: ^5.0.1
   flutter_cupertino_date_picker: ^1.0.26+2
+  rxdart: ^0.24.0
+  flutter_blue: ^0.7.2
 
 dev_dependencies:
   flutter_test:

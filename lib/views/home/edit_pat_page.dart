@@ -1,16 +1,13 @@
 import 'package:bess/common/net.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cupertino_date_picker/flutter_cupertino_date_picker.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:convert';
+import 'package:bess/common/global.dart';
 import 'package:bess/event/event_bus.dart';
-
 import 'package:bess/utils/util.dart';
 
 class EditPatPage extends StatefulWidget {
   String type;
-  String uid;
-  EditPatPage(this.type, this.uid);
+  EditPatPage(this.type);
   _EditPatPage createState() => _EditPatPage();
 }
 
@@ -41,8 +38,9 @@ class _EditPatPage extends State<EditPatPage> {
   }
 
   void editPat() async {
+    Map<String, dynamic> currentPat = Global.getCurrentPat();
     Map<String, dynamic> patInfo = {
-      "UID": widget.uid != null ? widget.uid : "2020072118563355",
+      "UID": currentPat["UID"],
       "ID": userInfo["Patient"]["ID"],
       "Name": _nameController.text,
       "Sex": sex,
@@ -52,7 +50,6 @@ class _EditPatPage extends State<EditPatPage> {
     print('patInfo: $patInfo');
     dynamic res = await Net.updatePat(patInfo);
     if (res['code'] == 0) {
-      print('editPat: $patInfo');
       bus.emit('changePat', patInfo);
       Navigator.of(context).pop();
     } else {
@@ -66,10 +63,10 @@ class _EditPatPage extends State<EditPatPage> {
     if (widget.type == 'edit') initAsync();
   }
 
-  void initAsync() async {
-    final prefs = await SharedPreferences.getInstance();
-    Map<String, dynamic> userInfoState =
-    jsonDecode(prefs.getString('_userInfo'));
+  void initAsync() {
+    Map<String, dynamic> currentPat = Global.getCurrentPat();
+    print("currentPat: $currentPat");
+    Map<String, dynamic> userInfoState = Global.getUserData();
     _nameController.text = userInfoState["Patient"]["Name"];
     _qrcodeController.text = userInfoState["Patient"]["RecordNumber"];
     _ageController.text = userInfoState["Patient"]["Birthday"];

@@ -87,32 +87,19 @@ class _ChangePassPage extends State<ChangePassPage> {
                       controller: _oldPassController,
                       obscureText: true,
                       decoration:
-                          InputDecoration(labelText: '原密码', hintText: '请输入原密码'),
-                      validator: (v) {
-                        return v.trim().length > 0 ? null : '原密码不能为空';
-                      },
+                          InputDecoration(labelText: '原密码', hintText: '请输入原密码')
                     ),
                     TextFormField(
                       controller: _newOnePassController,
                       obscureText: true,
                       decoration:
-                          InputDecoration(labelText: '新密码', hintText: '请输入新密码'),
-                      validator: (v) {
-                        return v.trim().length > 0 ? null : '新密码不能为空';
-                      },
+                          InputDecoration(labelText: '新密码', hintText: '请输入新密码')
                     ),
                     TextFormField(
                       controller: _newTwoPassController,
                       obscureText: true,
                       decoration: InputDecoration(
                           labelText: '确认密码', hintText: '请再次输入新密码'),
-                      validator: (v) {
-                        if (v.trim().length > 0) {
-                          return null;
-                        } else {
-                          return '请再次输入新密码';
-                        }
-                      },
                     )
                   ],
                 ),

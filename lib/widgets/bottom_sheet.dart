@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:bess/routes/routers.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:convert';
 import 'package:bess/utils/util.dart';
 import 'package:bess/event/event_bus.dart';
+// import 'package:bess/blocs/user_bloc.dart';
 import 'package:bess/common/global.dart';
 
 Future<int> bottomSheet(BuildContext context, patList) async {
-  final prefs = await SharedPreferences.getInstance();
-  Map<String, dynamic> userInfoState = jsonDecode(prefs.getString('_userData'));
+  Map<String, dynamic> userInfoState = Global.getUserData();
 
   showModalBottomSheet(
       shape: RoundedRectangleBorder(
@@ -21,19 +19,25 @@ Future<int> bottomSheet(BuildContext context, patList) async {
 }
 
 Widget _sheetWidget(context, List patList, userInfo) {
+  // final bloc = BlocProvider.of(context);
   EventBus bus = EventBus();
 
   void switchPat(index, context) async {
     userInfo["Patient"] = patList[index];
-//    Global.saveUserData(userInfo);
     bus.emit('changePat', patList[index]);
+    // save userData
+    Global.saveUserData(userInfo);
+    // save currentPat
+    Global.saveCurrentPat(patList[index]);
     Navigator.of(context).pop();
+    // bloc.setUserData(userInfo);
   }
 
   void editPat() {
+    // 查找对应患者 获取 UID
     int index = patList.indexWhere((e) => e["ID"] == userInfo["Patient"]["ID"]);
-    print(patList[index]);
-    Routes.push(context, "/edit-pat/edit/${patList[index]["UID"]}");
+    Global.saveCurrentPat(patList[index]);
+    Routes.push(context, "/edit-pat/edit");
   }
 
   return SizedBox(
@@ -49,7 +53,7 @@ Widget _sheetWidget(context, List patList, userInfo) {
                 flex: 60,
                 child: Align(
                   alignment: Alignment.topRight,
-                  child: Text('切换患者', style: TextStyle(fontSize: 20)),
+                  child: Text('切换患者', style: TextStyle(fontSize: 20))
                 ),
               ),
               Expanded(
@@ -190,7 +194,6 @@ Widget _sheetWidget(context, List patList, userInfo) {
                         Expanded(
                           flex: 3,
                           child: GestureDetector(
-                            onTap: () {},
                             child: Wrap(
                               children: <Widget>[
                                 Text('${patList[index]['RecordCount']}次听诊记录',
@@ -223,7 +226,7 @@ Widget _sheetWidget(context, List patList, userInfo) {
                 Expanded(
                   child: GestureDetector(
                     onTap: () {
-                      Routes.push(context, '/edit-pat/add/0');
+                      Routes.push(context, '/edit-pat/add');
                     },
                     child: Wrap(
                       alignment: WrapAlignment.center,

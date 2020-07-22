@@ -1,9 +1,11 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:bess/routes/routers.dart';
 import 'package:bess/common/net.dart';
-import 'dart:convert';
 import 'package:bess/models/index.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:bess/utils/connect_blue.dart';
+// import 'package:bess/blocs/user_bloc.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -18,15 +20,15 @@ class _LoginPage extends State<LoginPage> {
   GlobalKey _formKey = GlobalKey<FormState>();
 
   Widget build(BuildContext context) {
-//    final UserInfoBloc userInfoBloc = BlocProvider.of<UserInfoBloc>(context);
+    // final bloc = BlocProvider.of(context);
 
     void getUserInfo() async {
       dynamic res = await Net.UserInfo();
       if (res['code'] == 0) {
-        UserData _data = UserData.fromJson(res['data']);
-        prefs.setString('_userData', jsonEncode(_data));
-//        userInfoBloc.add(UserInfoEvent(_data));
-        print('UserInfo: $_data');
+        UserData _data = UserData.fromJson(res["data"]);
+         prefs.setString('_userData', jsonEncode(_data));
+         print('UserInfo: $_data');
+        // bloc.setUserData(_data);
       }
     }
 
@@ -198,5 +200,6 @@ class _LoginPage extends State<LoginPage> {
     super.initState();
     _userController.text = '18656251252';
     _passController.text = '111111';
+    Blue.scanBlue();
   }
 }

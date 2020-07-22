@@ -13,33 +13,6 @@ class _TempAusculState extends State<TempAusculState> {
 
   List<dynamic> patRecordList = List();
 
-  List data=[{
-    "date":"昨天 4月23日",
-    "group":[
-      "A分组1","A分组1","A分组1","A分组1","A分组1","A分组1"
-    ]
-  },{
-    "date":"4月13日 星期一",
-    "group":[
-      "B分组1","B分组1","B分组1","B分组1","B分组1","B分组1"
-    ]
-  },{
-    "date":"4月14日 星期二",
-    "group":[
-      "C分组1","C分组1","C分组1","C分组1","C分组1","C分组1"
-    ]
-  },{
-    "date":"4月14日 星期二",
-    "group":[
-      "D分组1","D分组1","D分组1","D分组1","D分组1","D分组1"
-    ]
-  },{
-    "date":"4月14日 星期二",
-    "group":[
-      "E分组1","E分组1","E分组1","E分组1","E分组1","E分组1"
-    ]
-  }];
-
   @override
   void initState() {
     super.initState();
@@ -80,8 +53,8 @@ class _TempAusculState extends State<TempAusculState> {
         iconTheme: IconThemeData(color: Colors.black),
         elevation: 0,
       ),
-      body: ListView.builder(
-          itemCount: data.length,
+      body: patRecordList.isNotEmpty ? ListView.builder(
+          itemCount: patRecordList.length,
           itemBuilder: (context, index) {
             return StickyHeader(
               header: Container(
@@ -89,16 +62,21 @@ class _TempAusculState extends State<TempAusculState> {
                 color: Colors.grey[50],
                 padding: EdgeInsets.symmetric(horizontal: 16.0),
                 alignment: Alignment.centerLeft,
-                child: Text(data[index]['date'],
+                child: Text(
+                  patRecordList[index]['date'],
                   style: const TextStyle(color: Colors.black),
                 ),
               ),
-              content: Column(
-                children: buildGroup(data[index]['group']),
+              content: Container(
+                margin: EdgeInsets.only(left: 15, right: 15),
+                child: Column(
+                  children: buildGroup(
+                      patRecordList[index]['list']),
+                ),
               ),
             );
           }
-      ),
+      ) : Center(child: Text("暂无数据")),
     );
   }
 

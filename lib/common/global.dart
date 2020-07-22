@@ -41,4 +41,19 @@ class Global {
   static saveUserData(userData) {
     _prefs.setString("_userData", jsonEncode(userData));
   }
+
+  // 保存 currentPat
+  static saveCurrentPat(patData) {
+    _prefs.setString("_currentPat", jsonEncode(patData));
+  }
+
+  // 读取 userData
+  static getUserData() {
+    return jsonDecode(_prefs.getString("_userData"));
+  }
+
+  // 读取 currentPat
+  static getCurrentPat() {
+    return jsonDecode(_prefs.getString("_currentPat"));
+  }
 }

@@ -7,6 +7,8 @@ import 'package:bess/common/global.dart';
 //import 'views/main_page.dart';
 //import 'views/prompt_page.dart';
 
+import 'package:bess/blocs/user_bloc.dart';
+
 class MyApp extends StatefulWidget {
   MyApp() {
     final router = Router();
@@ -20,22 +22,24 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      localizationsDelegates: [
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-      ],
-      supportedLocales: [
-        const Locale('zh', 'CH'),
-        const Locale('en', 'US'),
-      ],
-      title: 'BESS',
-      // 自定义主题样本
-      theme: ThemeData(primarySwatch: Colors.lightBlue),
-      home: LoginPage(),
+    return BlocProvider(
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        localizationsDelegates: [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+        ],
+        supportedLocales: [
+          const Locale('zh', 'CH'),
+          const Locale('en', 'US'),
+        ],
+        title: 'BESS',
+        // 自定义主题样本
+        theme: ThemeData(primarySwatch: Colors.lightBlue),
+        home: LoginPage(),
 //      true ? PromptPage() : MainPage()
-      // home: BottomNavBar(),
+        // home: BottomNavBar(),
+      ),
     );
   }
 
@@ -45,3 +49,27 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
   Global.init().then((_) => runApp(MyApp()));
 }
+
+
+//class _MyAppState extends State<MyApp> {
+//  Widget build(BuildContext context) {
+//    return MaterialApp(
+//      debugShowCheckedModeBanner: false,
+//      localizationsDelegates: [
+//        GlobalMaterialLocalizations.delegate,
+//        GlobalWidgetsLocalizations.delegate,
+//      ],
+//      supportedLocales: [
+//        const Locale('zh', 'CH'),
+//        const Locale('en', 'US'),
+//      ],
+//      title: 'BESS',
+//      // 自定义主题样本
+//      theme: ThemeData(primarySwatch: Colors.lightBlue),
+//      home: LoginPage(),
+////      true ? PromptPage() : MainPage()
+//      // home: BottomNavBar(),
+//    );
+//  }
+//
+//}

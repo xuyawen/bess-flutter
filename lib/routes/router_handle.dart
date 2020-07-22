@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:fluro/fluro.dart';
-
 import 'package:bess/views/login/login_page.dart';
 import 'package:bess/views/prompt_page.dart';
 import 'package:bess/views/main_page.dart';
@@ -12,6 +11,7 @@ import 'package:bess/views/mine/mine_page.dart';
 import 'package:bess/views/mine/edit_user_page.dart';
 import 'package:bess/views/mine/change_pass_page.dart';
 import 'package:bess/views/mine/about_page.dart';
+import 'package:bess/views/demo/demo_page.dart';
 
 // 登录
 var loginHandle = Handler(
@@ -38,8 +38,7 @@ var homeHandle = Handler(
 var editPatHandle = Handler(
     handlerFunc: (BuildContext context, Map<String, List<String>> params) {
       String type = params["type"].first;
-      String uid = params["uid"]?.first;
-      return EditPatPage(type, uid);
+      return EditPatPage(type);
     }
 );
 
@@ -91,3 +90,10 @@ var editUserHandle = Handler(
       return EditUserPage();
     }
 );
+
+// 编辑用户
+//var demoHandle = Handler(
+//    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+//      return TopPage();
+//    }
+//);

@@ -5,11 +5,11 @@ import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:sticky_headers/sticky_headers.dart';
 import 'package:bess/widgets/bottom_sheet.dart';
 import 'package:bess/common/net.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:convert';
 import 'package:bess/utils/util.dart';
 import 'package:bess/event/event_bus.dart';
 import 'package:bess/common/global.dart';
+// import 'package:bess/utils/connect_blue.dart';
+// import 'package:bess/blocs/user_bloc.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -43,10 +43,11 @@ class _HomePageState extends State<HomePage> {
     bus.off('changePat');
   }
 
-  void initAsync() async {
-    final prefs = await SharedPreferences.getInstance();
-    Map<String, dynamic> userInfoState =
-    jsonDecode(prefs.getString('_userInfo'));
+  void initAsync() {
+
+
+
+    Map<String, dynamic> userInfoState = Global.getUserData();
     int patId = userInfoState["Patient"]["ID"];
     getRecordList(patId);
     setState(() {
@@ -91,6 +92,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    // final bloc = BlocProvider.of(context);
     return Scaffold(
       resizeToAvoidBottomPadding: false,
       body: SlidingUpPanel(
@@ -156,6 +158,7 @@ class _HomePageState extends State<HomePage> {
                         child: SizedBox(
                           child: GestureDetector(
                             onTap: () {
+                              // bloc.setUserData(userInfo);
                               bottomSheet(context, patList);
                             },
                             child:
@@ -288,7 +291,7 @@ class _HomePageState extends State<HomePage> {
                               ),
                             );
                           })
-                      : Padding(padding: EdgeInsets.only(top: 10),child: Text('暂无数据')),
+                      : Center(child: Text('暂无数据')),
                 ),
               ),
             ]),
@@ -314,7 +317,12 @@ class _HomePageState extends State<HomePage> {
                     ),
                     Expanded(
                       flex: 1,
-                      child: Icon(Icons.close, size: 30),
+                      child: GestureDetector(
+                        onTap: () {
+                          panel.close();
+                        },
+                        child: Icon(Icons.close, size: 30),
+                      ),
                     ),
                   ],
                 ),

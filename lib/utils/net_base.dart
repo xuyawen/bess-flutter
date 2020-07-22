@@ -11,7 +11,8 @@ Map<String, dynamic> optHeader = {
   'accept-language': 'zh-cn',
   'content-type': 'application/json',
 };
-
+// 代理地址
+var ip = '192.168.0.33:8888';
 var dio = new Dio(BaseOptions(connectTimeout: 30000, headers: optHeader));
 
 class NetBase {
@@ -22,7 +23,7 @@ class NetBase {
      (dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate =
          (HttpClient client) {
        client.findProxy = (uri) {
-         return "PROXY 192.168.0.33:8888";
+         return "PROXY $ip";
        };
      };
     final prefs = await SharedPreferences.getInstance();
@@ -54,7 +55,7 @@ class NetBase {
      (dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate =
          (HttpClient client) {
        client.findProxy = (uri) {
-         return "PROXY 192.168.0.33:8888";
+         return "PROXY $ip";
        };
      };
     final prefs = await SharedPreferences.getInstance();
