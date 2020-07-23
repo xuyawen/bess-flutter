@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:bess/routes/routers.dart';
 import 'package:bess/common/net.dart';
 import 'package:bess/models/index.dart';
+import 'package:bess/common/global.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:bess/utils/connect_blue.dart';
 // import 'package:bess/blocs/user_bloc.dart';
 
 class LoginPage extends StatefulWidget {
@@ -13,11 +13,18 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPage extends State<LoginPage> {
-  dynamic prefs;
-
   TextEditingController _userController = TextEditingController();
   TextEditingController _passController = TextEditingController();
   GlobalKey _formKey = GlobalKey<FormState>();
+  String loginText = '登录';
+  bool loading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _userController.text = '18656251252';
+    _passController.text = '111111';
+  }
 
   Widget build(BuildContext context) {
     // final bloc = BlocProvider.of(context);
@@ -25,25 +32,30 @@ class _LoginPage extends State<LoginPage> {
     void getUserInfo() async {
       dynamic res = await Net.UserInfo();
       if (res['code'] == 0) {
-        UserData _data = UserData.fromJson(res["data"]);
-         prefs.setString('_userData', jsonEncode(_data));
-         print('UserInfo: $_data');
+         Global.saveUserData(res["data"]);
         // bloc.setUserData(_data);
       }
     }
 
     void doLogin() async {
-      prefs = await SharedPreferences.getInstance();
+      if (loading) return;
+      setState(() {
+        loading = true;
+        loginText = '登录中...';
+      });
       dynamic res = await Net.Login(
           {'Username': _userController.text, 'Password': _passController.text});
       if (res['code'] == 0) {
         String _token = res['data'];
-        prefs.setString('_token', _token);
+        Global.saveToken('_token', _token);
         getUserInfo();
         Routes.push(context, "/home");
       } else {
         print(res);
       }
+      setState(() {
+        loading = false;
+      });
     }
 
     return Scaffold(
@@ -150,9 +162,9 @@ class _LoginPage extends State<LoginPage> {
                           height: 60,
                           width: double.infinity,
                           child: FlatButton(
-                            color: Colors.blue,
+                            color: loading ? Colors.grey : Colors.blue,
                             highlightColor: Colors.blue[700],
-                            child: Text('登录',
+                            child: Text(loginText,
                                 style: TextStyle(
                                     color: Colors.white, fontSize: 20)),
                             shape: RoundedRectangleBorder(
@@ -193,13 +205,5 @@ class _LoginPage extends State<LoginPage> {
         ),
       ),
     );
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _userController.text = '18656251252';
-    _passController.text = '111111';
-    Blue.scanBlue();
   }
 }

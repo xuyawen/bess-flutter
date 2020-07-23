@@ -13,7 +13,10 @@ const _themes = <MaterialColor>[
 
 class Global {
   // 保存用户信息
-  static UserData _userData;
+  static Map userData = Map();
+  static Map patData = Map();
+  static Map deviceData = Map();
+  static Map userInfo = Map();
 
   static SharedPreferences _prefs;
 
@@ -26,24 +29,51 @@ class Global {
   //初始化全局信息，会在APP启动时执行
   static Future init() async {
     _prefs = await SharedPreferences.getInstance();
-    var _profile = _prefs.getString("profile");
-    if (_profile != null) {
+    var _userData = _prefs.getString("_userData");
+    if (_userData != null) {
       try {
-        _userData = UserData.fromJson(jsonDecode(_profile));
-        print('_userData: $_userData');
+        userData = jsonDecode(_userData);
       } catch (e) {
         print(e);
       }
     }
   }
 
+  // 保存
+  static setPref(String key, dynamic value) {
+    _prefs.setString(key, jsonEncode(value));
+  }
+
+  // 读取
+  static dynamic getPref(String key) {
+    return jsonDecode(_prefs.getString(key));
+  }
+
+  // 移除
+  static removePref(String key) {
+    _prefs.remove(key);
+  }
+
+  // 保存 token
+  static saveToken(String key, dynamic value) {
+    _prefs.setString(key, value);
+  }
+
+  // 读取 token
+  static String getToken() {
+    return _prefs.getString("_token");
+  }
+
   // 保存 userData
   static saveUserData(userData) {
+    userData = userData;
+    deviceData = userData["Device"];
     _prefs.setString("_userData", jsonEncode(userData));
   }
 
   // 保存 currentPat
   static saveCurrentPat(patData) {
+    patData = patData;
     _prefs.setString("_currentPat", jsonEncode(patData));
   }
 

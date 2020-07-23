@@ -18,7 +18,8 @@ class _EditPatPage extends State<EditPatPage> {
   TextEditingController _qrcodeController = TextEditingController();
   TextEditingController _ageController = TextEditingController();
   GlobalKey _formKey = GlobalKey<FormState>();
-  Map<String, dynamic> userInfo;
+  Map<String, dynamic> userInfo = Global.getUserData();
+  Map<String, dynamic> currentPat = Global.getCurrentPat();
 
   void addPat() async {
     Map<String, dynamic> patInfo = {
@@ -64,15 +65,11 @@ class _EditPatPage extends State<EditPatPage> {
   }
 
   void initAsync() {
-    Map<String, dynamic> currentPat = Global.getCurrentPat();
-    print("currentPat: $currentPat");
-    Map<String, dynamic> userInfoState = Global.getUserData();
-    _nameController.text = userInfoState["Patient"]["Name"];
-    _qrcodeController.text = userInfoState["Patient"]["RecordNumber"];
-    _ageController.text = userInfoState["Patient"]["Birthday"];
+    _nameController.text = currentPat["Name"];
+    _qrcodeController.text = currentPat["RecordNumber"];
+    _ageController.text = currentPat["Birthday"];
     setState(() {
-      sex = userInfoState["Patient"]["Sex"];
-      userInfo = userInfoState;
+      sex = currentPat["Sex"];
     });
   }
 
@@ -186,7 +183,7 @@ class _EditPatPage extends State<EditPatPage> {
                             cancel: Text('取消',
                                 style: TextStyle(color: Colors.cyan)),
                           ),
-                          initialDateTime: DateTime.now(), //当前日期
+                          initialDateTime: widget.type == 'add' ? DateTime.now() : DateTime.parse(currentPat["Birthday"]), //当前日期
                           dateFormat: 'yyyy-MMMM-dd', //显示格式
                           locale: DateTimePickerLocale
                               .zh_cn, //语言 默认DateTimePickerLocale.en_us

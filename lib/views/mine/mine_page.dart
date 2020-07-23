@@ -3,6 +3,7 @@ import 'package:bess/routes/routers.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import 'package:bess/event/event_bus.dart';
+import 'package:bess/common/global.dart';
 
 class MinePage extends StatefulWidget {
   @override
@@ -331,6 +332,7 @@ class _MinePageState extends State<MinePage> {
                       flex: 9,
                       child: GestureDetector(
                         onTap: () {
+                          Global.removePref('_token');
                           Routes.push(context, "/login");
                         },
                         child: Text('退出登录',

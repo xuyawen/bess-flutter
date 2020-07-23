@@ -8,8 +8,9 @@ import 'package:bess/common/net.dart';
 import 'package:bess/utils/util.dart';
 import 'package:bess/event/event_bus.dart';
 import 'package:bess/common/global.dart';
-// import 'package:bess/utils/connect_blue.dart';
+import 'package:bess/utils/connect_blue.dart';
 // import 'package:bess/blocs/user_bloc.dart';
+
 
 class HomePage extends StatefulWidget {
   @override
@@ -19,15 +20,17 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   EventBus bus = EventBus();
   PanelController panel = new PanelController();
-  List patList = List();
   List patRecordList = List();
-  Map<String, dynamic> userInfo;
+  Map<String, dynamic> userInfo = Global.getUserData();
+  bool hasDevice = false;
+  bool isConnectBle = false;
+  Map<String, dynamic> currentDevice = Map();
+  List deviceList = List();
 
   @override
   void initState() {
     super.initState();
     initAsync();
-    getPatList();
     bus.on('changePat', (arg) {
       getRecordList(arg["ID"]);
       setState(() {
@@ -44,25 +47,9 @@ class _HomePageState extends State<HomePage> {
   }
 
   void initAsync() {
-
-
-
-    Map<String, dynamic> userInfoState = Global.getUserData();
-    int patId = userInfoState["Patient"]["ID"];
+    int patId = userInfo["Patient"]["ID"];
     getRecordList(patId);
-    setState(() {
-      userInfo = userInfoState;
-    });
-  }
-
-  void getPatList() async {
-    dynamic res = await Net.getPatList();
-    if (res['code'] == 0) {
-      Object _data = res['data']['list'];
-      setState(() {
-        patList = _data;
-      });
-    }
+    deviceList.add(userInfo["Device"]);
   }
 
   void getRecordList(patId) async {
@@ -133,22 +120,22 @@ class _HomePageState extends State<HomePage> {
                               crossAxisAlignment: WrapCrossAlignment.center,
                               spacing: 8,
                               children: <Widget>[
-                                Text('${userInfo != null ? userInfo["Patient"]["Name"] : ''}',
+                                Text('${userInfo["Patient"]["Name"]}',
                                     style: TextStyle(
                                         color: Colors.white, fontSize: 18)),
                                 Icon(
-                                    userInfo != null && userInfo["Patient"]['Sex'] == 1
+                                    userInfo["Patient"]['Sex'] == 1
                                         ? Icons.person
                                         : Icons.person,
-                                    color: userInfo != null && userInfo["Patient"]['Sex'] == 1
+                                    color: userInfo["Patient"]['Sex'] == 1
                                         ? Colors.white
                                         : Colors.pinkAccent),
                                 Text(
-                                    '${userInfo != null ? getAge(userInfo["Patient"]["Birthday"]) : 0}岁',
+                                    '${getAge(userInfo["Patient"]["Birthday"])}岁',
                                     style: TextStyle(color: Colors.white)),
                               ],
                             ),
-                            Text('病历号：${userInfo != null ? userInfo["Patient"]["RecordNumber"] : ''}',
+                            Text('病历号：${userInfo["Patient"]["RecordNumber"]}',
                                 style: TextStyle(color: Colors.white)),
                           ],
                         ),
@@ -159,7 +146,7 @@ class _HomePageState extends State<HomePage> {
                           child: GestureDetector(
                             onTap: () {
                               // bloc.setUserData(userInfo);
-                              bottomSheet(context, patList);
+                              bottomSheet(context);
                             },
                             child:
                                 Icon(Icons.switch_camera, color: Colors.white),
@@ -168,7 +155,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ],
                   ),
-                  Container(
+                  hasDevice ? Container(
                     margin: EdgeInsets.only(top: 20),
                     padding: EdgeInsets.all(15),
                     decoration: BoxDecoration(
@@ -187,16 +174,19 @@ class _HomePageState extends State<HomePage> {
                                 spacing: 10.0,
                                 crossAxisAlignment: WrapCrossAlignment.center,
                                 children: <Widget>[
-                                  Text(userInfo != null ? userInfo["Device"]["Name"] : ''),
-                                  Icon(Icons.check_circle,
-                                      size: 15, color: Colors.blue),
-                                  Text('准备就绪',
+                                  Text(currentDevice["Name"]),
+                                  Offstage(
+                                    offstage: !isConnectBle,
+                                    child: Icon(Icons.check_circle,
+                                        size: 15, color: Colors.blue),
+                                  ),
+                                  Text(isConnectBle ? '准备就绪' : '正在连接',
                                       style: TextStyle(color: Colors.blue)),
                                 ],
                               ),
                               Padding(
                                 padding: EdgeInsets.only(top: 10.0),
-                                child: Text(userInfo != null ? userInfo["Device"]["Mac"] : '',
+                                child: Text(currentDevice["Mac"],
                                     style: TextStyle(color: Colors.grey)),
                               ),
                             ],
@@ -217,7 +207,7 @@ class _HomePageState extends State<HomePage> {
                                       padding: EdgeInsets.all(7),
                                       child: Column(
                                         crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                        CrossAxisAlignment.start,
                                         children: <Widget>[
                                           Row(
                                             children: <Widget>[
@@ -254,6 +244,28 @@ class _HomePageState extends State<HomePage> {
                           ),
                         ),
                       ],
+                    ),
+                  ) : Container(
+                    margin: EdgeInsets.only(top: 20),
+                    padding: EdgeInsets.only(top: 30, bottom: 30),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    child: GestureDetector(
+                      onTap: () {
+                        panel.open();
+                      },
+                      child: Center(
+                        child: Wrap(
+                          spacing: 10,
+                          crossAxisAlignment: WrapCrossAlignment.center,
+                          children: <Widget>[
+                            Icon(Icons.add_circle_outline, color: Colors.blue),
+                            Text("请添加听诊器设备", style: TextStyle(color: Colors.blue, fontSize: 18))
+                          ],
+                        ),
+                      ),
                     ),
                   ),
                 ],
@@ -309,7 +321,7 @@ class _HomePageState extends State<HomePage> {
                     Expanded(
                       flex: 9,
                       child: ListTile(
-                        title: Text('设备管理 （2）',
+                        title: Text('设备管理 （${deviceList.length}）',
                             style: TextStyle(
                                 fontWeight: FontWeight.bold, fontSize: 20)),
                         subtitle: Text('智能电子听诊器'),
@@ -329,71 +341,82 @@ class _HomePageState extends State<HomePage> {
               ),
               SizedBox(
                 height: 328,
-                child: ListView(
+                child: ListView.builder(
+                  itemCount: deviceList.length,
                   padding: EdgeInsets.only(top: 10),
-                  children: <Widget>[
-                    Container(
-                      margin: EdgeInsets.only(left: 18, right: 18),
-                      padding: EdgeInsets.only(
-                          top: 25, bottom: 25, left: 18, right: 18),
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(8.0),
-                          boxShadow: [
-                            //阴影
-                            BoxShadow(
-                                color: Colors.grey,
-                                offset: Offset(0.1, 0.1),
-                                blurRadius: 4.0)
-                          ]),
-                      child: Flex(
-                        direction: Axis.horizontal,
-                        children: <Widget>[
-                          Expanded(
-                            flex: 2,
-                            child: UnconstrainedBox(
+                  itemBuilder: (BuildContext context, int index) {
+                    return GestureDetector(
+                      onTap: () {
+                        Blue.getDrive();
+                        setState(() {
+                          currentDevice = deviceList[index];
+                          // hasDevice = true;
+                          panel.close();
+                        });
+                      },
+                      child: Container(
+                        margin: EdgeInsets.only(left: 18, right: 18),
+                        padding: EdgeInsets.only(
+                            top: 25, bottom: 25, left: 18, right: 18),
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(8.0),
+                            boxShadow: [
+                              //阴影
+                              BoxShadow(
+                                  color: Colors.grey,
+                                  offset: Offset(0.1, 0.1),
+                                  blurRadius: 4.0)
+                            ]),
+                        child: Flex(
+                          direction: Axis.horizontal,
+                          children: <Widget>[
+                            Expanded(
+                              flex: 2,
+                              child: UnconstrainedBox(
+                                child: Container(
+                                  width: 50,
+                                  height: 50,
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey[200],
+                                  ),
+                                  child: Icon(Icons.brightness_auto),
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              flex: 7,
                               child: Container(
                                 width: 50,
                                 height: 50,
-                                decoration: BoxDecoration(
-                                  color: Colors.grey[200],
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Text(deviceList[index]["Name"],
+                                        style: TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold)),
+                                    Padding(
+                                      padding: EdgeInsets.only(top: 7),
+                                      child: Text(deviceList[index]["Mac"]),
+                                    ),
+                                  ],
                                 ),
-                                child: Icon(Icons.brightness_auto),
                               ),
                             ),
-                          ),
-                          Expanded(
-                            flex: 7,
-                            child: Container(
-                              width: 50,
-                              height: 50,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Text('智能电子听诊器',
-                                      style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold)),
-                                  Padding(
-                                    padding: EdgeInsets.only(top: 7),
-                                    child: Text('MAC: f0:01:5b:0a:a5:5a'),
-                                  ),
-                                ],
+                            Expanded(
+                              flex: 1,
+                              child: Container(
+                                width: 50,
+                                height: 50,
+                                child: Icon(Icons.chevron_right),
                               ),
-                            ),
-                          ),
-                          Expanded(
-                            flex: 1,
-                            child: Container(
-                              width: 50,
-                              height: 50,
-                              child: Icon(Icons.chevron_right),
-                            ),
-                          )
-                        ],
+                            )
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
+                    );
+                  },
                 ),
               ),
               Padding(
